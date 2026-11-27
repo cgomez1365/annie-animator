@@ -97,8 +97,8 @@ Deterministic randomness via LCG: `s = (s * 1103515245 + 12345) & 0x7fffffff`. S
 - The window is the teaching space — all instruction happens inside it
 - End with slogan + CTA + footer, never abruptly
 
-## Skill tree (built 2026-11-19)
-36 skills on one engine: read `SKILL_TREE.md` (or `skill_tree.html` / PDF), then `engine/README.md`, then the skill folder you need (`skills/<id>_<slug>/SKILL.md`, runnable `demo.mjs` and `test.mjs`). Independent review in `REVIEW.md` (7.3/10). Set `ANNIE_CANVAS`, `ANNIE_FFMPEG`, `ANNIE_LUCIDE` if the AEON-wt-deps folder is gone; use `ANNIE_PREVIEW=1` and at most 2 workers while iterating. Known gaps: no human has watched the demos; Cog mascot unapproved; t5.2 partial.
+## Skill tree
+45 skills across 9 tiers (t0–t8): read `SKILL_TREE.md`, then `engine/README.md`, then the skill folder you need (`skills/<id>_<slug>/SKILL.md`, runnable `demo.mjs` and `test.mjs`). Independent review in `REVIEW.md` (7.3/10 for original 36). Set `ANNIE_CANVAS`, `ANNIE_FFMPEG`, `ANNIE_LUCIDE` if the AEON-wt-deps folder is gone; use `ANNIE_PREVIEW=1` and at most 2 workers while iterating. Known gaps: no human has watched the demos; Cog mascot unapproved; t5.2 partial.
 
 ## Standing rule (CEO 2026-11-22)
 When you hand the CEO a file to review, put it in chat as a clickable markdown link (path relative to the working directory), one per file, next to the question. He runs many agents over a huge database; links are faster than paths.

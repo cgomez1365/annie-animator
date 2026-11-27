@@ -1,6 +1,6 @@
 # Annie the Animator: skill tree
 
-36 skills in 8 tiers on one shared engine. Status: 35 verified, 1 partial, 0 failed. Independent review score: **7.3 / 10** (REVIEW.md).
+45 skills in 9 tiers on one shared engine. Core 36: 35 verified, 1 partial, 0 failed (independent review: **7.3 / 10**, REVIEW.md). Plus 9 production/creative skills (t5.5–t8.2) added 2026-11-27.
 
 Built 2026-11-19. Start with `engine/README.md`, then the skill you need (each folder has SKILL.md, module.mjs, demo.mjs, test.mjs, out/demo.mp4).
 
@@ -61,6 +61,10 @@ Built 2026-11-19. Start with `engine/README.md`, then the skill you need (each f
 | t5.2 | [Beat sync](skills/t5_2_beat-sync/SKILL.md) | partial | 6 | t0.1, t0.2 | Find a track's tempo and beats and use them to snap cuts and drive pulses, bounces and step lights. |
 | t5.3 | [SFX design and mix](skills/t5_3_sfx-design-and-mix/SKILL.md) | verified | 7 | t5.1, t0.3 | Seven soft synthesized effects and an ffmpeg mix (voice -16 LUFS, effects, ducked bed) with measured loudness, true peak and envelope plots. |
 | t5.4 | [Karaoke captions](skills/t5_4_karaoke-captions/SKILL.md) | verified | 7 | t5.1, t0.3 | Burn in captions at y 1470 with the current word wiped green as it is said, and write the .srt from the same timings. |
+| t5.5 | [Training video production](skills/t5_5_training-video-production/SKILL.md) | verified | — | t5.1, t0.3 | End-to-end training video pipeline: Kokoro TTS voice-over, pure-JS music beds, ffmpeg assembly, QC checks. Proven on FQC. |
+| t5.6 | [Music generation (algorithmic)](skills/t5_6_music-generation-algorithmic/SKILL.md) | new | — | t0.2 | Algorithmic music via music theory: scales, chord progressions, rhythm patterns → MIDI → SoundFont rendering. 100% original, no AI weights. Python. |
+| t5.7 | [Music generation (AI model)](skills/t5_7_music-generation-ai/SKILL.md) | new | — | t0.2 | MusicGen-small (300M params), 12 style presets, GPU-accelerated. Prompt-driven original music generation. Python + PyTorch. |
+| t5.8 | [Audio synthesis (pure JS)](skills/t5_8_audio-synthesis-js/SKILL.md) | new | — | t0.2 | Zero-dependency music beds and SFX in Node.js: drum machines, pads, singing bowls, seeded RNG. Runs anywhere Node runs. |
 
 ## Tier 6: Production
 
@@ -71,6 +75,8 @@ Built 2026-11-19. Start with `engine/README.md`, then the skill you need (each f
 | t6.3 | [Platform packaging](skills/t6_3_platform-packaging/SKILL.md) | verified | 7 | t0.3, t0.4 | Check the video file, choose the cover frame and write the TikTok, Reels and Shorts post file with every limit, AI label, 18+ control and music credit checked. |
 | t6.4 | [Accessibility and safety](skills/t6_4_accessibility-and-safety/SKILL.md) | verified | 7 | t0.1, t0.2, t0.4 | Score a card for flashing, contrast, reading time and motion, check caption files, and build calm motion modes into a card. |
 | t6.5 | [Performance profiling](skills/t6_5_performance-profiling/SKILL.md) | verified | 8 | t0.3, t0.4 | Find where a frame's time and memory go (the card is about 11 percent, the engine's PNG encode about 73), cut the card's own cost with layer caches, and predict render time. |
+| t6.6 | [Screen capture](skills/t6_6_screen-capture/SKILL.md) | verified | — | t0.3, t5.1 | CDP screencast recording of web apps via Playwright: frame capture, ffmpeg assembly, voice mixing, viewport presets, scene helpers. |
+| t6.7 | [Soft/relaxing video batch](skills/t6_7_soft-relaxing-video-batch/SKILL.md) | new | — | t5.1, t5.8, t0.3 | 48-video batch pipeline for calm faceless TikTok/Reels: Kokoro Nicole voice, singing-bowl music, slow-zoom AI stills. Proven pipeline. |
 
 ## Tier 7: Masterwork and 3D
 
@@ -79,6 +85,14 @@ Built 2026-11-19. Start with `engine/README.md`, then the skill you need (each f
 | t7.1 | [Pseudo 3D and isometric](skills/t7_1_pseudo-3d-and-isometric/SKILL.md) | verified | 8 | t0.1, t0.2, t0.3, t0.4 | Make flat canvas cards feel three-dimensional: flipping cards, isometric blocks, shaded faces, cast shadows and parallax depth. |
 | t7.2 | [Mesh turntable](skills/t7_2_mesh-turntable/SKILL.md) | verified | 8 | t0.1, t0.3, t7.1 | Load an STL, thin it to a fast cached mesh, and render a smooth shaded turntable (with an optional printed-layer reveal) in plain JavaScript. |
 | t7.3 | [Motion brand system](skills/t7_3_motion-brand-system/SKILL.md) | verified | 7 | t0.1, t0.2, t0.4 | The BGI and AEON signature motion as code: a named timing-curve library, a cog that turns in clicks, do and do-not rules, and a scorer that grades a card file and lists fixes. |
+| t7.4 | [3D print pipeline](skills/t7_4_3d-print-pipeline/SKILL.md) | new | — | t7.2 | CadQuery/OpenSCAD parametric modeling → STL → Flash Studio/OrcaSlicer slicing → Flashforge Adventurer 5M. Holiday set and shelf tower as examples. |
+
+## Tier 8: Creative AI
+
+| id | skill | status | review | needs | what it does |
+|---|---|---|---|---|---|
+| t8.1 | [Image design](skills/t8_1_image-design/SKILL.md) | new | — | t3.4 | Prompt engineering for Midjourney/DALL-E/Flux/SD quality: wallpapers, backgrounds, product shots. Style control, composition, upscaling, batch generation. |
+| t8.2 | [Render engine (blocks)](skills/t8_2_render-engine-blocks/SKILL.md) | new | — | t0.3, t5.6 | Template-based video rendering: JSON manifest → visual blocks → queue → batch output. Music and voice layered separately. Server mode for API-driven rendering. |
 
 ## Honest limits
 - (major) all: No human has played any demo video or listened to any audio; motion judged from stills and numbers only.
