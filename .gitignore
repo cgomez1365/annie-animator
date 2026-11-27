@@ -1,0 +1,10 @@
+# Large WAV stems (>10MB) — regenerate via setup.sh
+skills/t5_5_training-video-production/assets/music_pad_full.wav
+skills/t5_5_training-video-production/assets/music/*.wav
+
+# Syncthing
+.stfolder/
+.stignore
+
+# Output
+**/out/

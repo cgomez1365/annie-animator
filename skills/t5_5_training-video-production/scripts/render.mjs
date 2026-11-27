@@ -1,0 +1,457 @@
+#!/usr/bin/env node
+// Voice-driven long lesson renderer (1080x1920, 30 fps). Scene length = the voice's length; every visual cue fires on the word it illustrates.
+//   node render.mjs <lessonDir> <tag>                full video  -> <lessonDir>/out/<id>_<tag>.mp4 (+ .srt)
+//   node render.mjs <lessonDir> <tag> --shots 5,40,90   PNG stills only -> out/shots/
+import fs from 'node:fs';
+import path from 'node:path';
+import { once } from 'node:events';
+import { spawn, execFileSync } from 'node:child_process';
+const { createCanvas } = await import(process.env.AIV_CANVAS || '@napi-rs/canvas');
+
+const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const FF = process.env.AIV_FFMPEG || 'ffmpeg';
+const [dirArg, tag, ...rest] = process.argv.slice(2);
+const DIR = path.resolve(dirArg);
+const W = 1080, H = 1920, FPS = 30, CX = 500;
+const PRE = 0.6, GAP = 0.45, TAIL = 0.7, LAST_TAIL = 3.6, X = 0.6;
+const FONT = '"SF Pro Display", system-ui, sans-serif';
+
+const C = { app: '#0a0c10', panel: '#0d1117', panel2: '#11161d', ink: '#f8fafc', text: '#cbd5e1', muted: '#94a3b8', faint: '#8190a5', dim: '#475569', white: '#f8fafc', accent: '#00c97a', green: '#19e08f', cyan: '#22d3ee', red: '#ef4444', amber: '#f59e0b' };
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const E = { outCubic: t => 1 - (1 - t) ** 3, inOutCubic: t => t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2, outBack: (t, s = 1.6) => { const u = t - 1; return u * u * ((s + 1) * u + s) + 1; } };
+const rr = (x, y, w, h, r) => { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); };
+
+// ── timeline ──
+const script = JSON.parse(fs.readFileSync(path.join(DIR, 'script.json'), 'utf8'));
+const durs = JSON.parse(fs.readFileSync(path.join(DIR, 'voice', tag, 'durations.json'), 'utf8'));
+const scenes = []; let gi = 0, Tcur = 0;
+script.scenes.forEach((s, i) => {
+  const sc = { i, visual: s.visual, kicker: s.kicker, next: s.next, data: s.data || null, text: s.sentences, at: [], dur: [], first: gi, T: Tcur };
+  let t = PRE;
+  s.sentences.forEach(() => { const d = durs[gi++].dur; sc.at.push(t); sc.dur.push(d); t += d + GAP; });
+  sc.D = t - GAP + (i === script.scenes.length - 1 ? LAST_TAIL : TAIL);
+  sc.w = (k, word, lead = 0.15) => { const s2 = sc.text[k].toLowerCase(); let ix = s2.indexOf(word.toLowerCase()); if (ix < 0) ix = 0; return Math.max(0, sc.at[k] + sc.dur[k] * (ix / s2.length) - lead); };
+  scenes.push(sc); Tcur += sc.D - X;
+});
+const total = scenes.at(-1).T + scenes.at(-1).D;
+const nFrames = Math.ceil(total * FPS);
+
+// ── cue times per scene (scene-local), shared by drawing and sound effects ──
+// cue(sc, [k, 'word']) = when that word starts in sentence k; cue(sc, [k]) = when sentence k starts
+const cue = (sc, on) => { if (!Array.isArray(on) || on.length < 1) throw new Error(`scene ${sc.i} (${sc.visual}): item has no "on" cue`); if (on[0] >= sc.text.length) throw new Error(`scene ${sc.i} (${sc.visual}): cue sentence ${on[0]} does not exist`); if (on.length > 1 && !sc.text[on[0]].toLowerCase().includes(String(on[1]).toLowerCase())) throw new Error(`scene ${sc.i} (${sc.visual}): word "${on[1]}" is not in sentence ${on[0]}`); return on.length > 1 ? sc.w(on[0], on[1]) : sc.at[on[0]]; };
+const Q = {
+  hook: sc => ({ chips: [sc.w(1, 'A search'), sc.w(1, 'An auto'), sc.w(1, 'A recomm')], q: sc.at[2], ring: sc.at[3] }),
+  predict: sc => ({ model: sc.at[0] + 0.2, flow: [sc.w(1, 'Given'), sc.w(1, 'predict'), sc.w(1, 'likely')], rows: [0, 1, 2, 3, 4].map(i => sc.w(2, 'assigns') + i * 0.28), hi: sc.w(3, 'Paris'), pick: sc.w(4, 'picks'), rep: sc.w(4, 'repeats'), tok: sc.w(5, 'small pieces') }),
+  train: sc => ({ pages: sc.at[0], hide: sc.w(1, 'sees'), guess: sc.w(1, 'guesses'), fix: sc.w(1, 'corrected'), chips: [sc.w(2, 'grammar'), sc.w(2, 'common'), sc.w(2, 'styles')], no: sc.w(3, 'not a database'), yes: sc.w(3, 'generates') }),
+  fluent: sc => ({ words: [sc.w(1, 'produce fluent'), sc.w(1, 'And fluent'), sc.w(1, 'true')], lines: [0, 1, 2, 3].map(i => sc.at[2] + 0.2 + i * (sc.dur[2] * 0.2)), stamp: sc.w(3, 'hallucination') + 0.2, verdict: sc.w(4, 'exactly') }),
+  goodbad: sc => ({ strong: ['drafting', 'summarizing', 'rewriting', 'explaining', 'organizing'].map(w => sc.w(0, w)), weak: ['exact', 'recent', 'arithmetic', 'small error'].map(w => sc.w(1, w)), p2: sc.at[1] }),
+  rule: sc => ({ checks: ['name', 'number', 'date', 'quote'].map(w => sc.w(1, w)), bars: sc.at[2] }),
+  recap: sc => ({ lines: sc.data ? sc.data.lines.map(l => cue(sc, l.on)) : [sc.w(0, 'A language'), sc.w(0, 'It learned'), sc.w(0, 'equally')], next: sc.at[1], end: sc.at[2] }),
+  // ── generic scenes: all content comes from script.json `data`; every item carries `on: [sentenceIndex, "word"]` (the word it appears on) ──
+  statement: sc => ({ items: sc.data.lines.map(l => cue(sc, l.on)), offs: sc.data.lines.map(l => l.off ? cue(sc, l.off) - 0.05 : 1e9) }),
+  steps: sc => ({ title: sc.data.title ? cue(sc, sc.data.title.on) : 0, items: sc.data.items.map(i => cue(sc, i.on)), foot: sc.data.foot ? cue(sc, sc.data.foot.on) : 0 }),
+  compare: sc => ({ items: sc.data.cards.map(c => cue(sc, c.on)) }),
+  example: sc => ({ prompt: sc.data.prompt.map(l => cue(sc, l.on)), chips: (sc.data.chips || []).map(c => cue(sc, c.on)), answer: cue(sc, sc.data.answerOn), alines: sc.data.answer.map((_, i) => cue(sc, sc.data.answerOn) + i * 0.3), tag: sc.data.answerTag && sc.data.answerTag.on ? cue(sc, sc.data.answerTag.on) : null }),
+};
+scenes.forEach(sc => { sc.q = Q[sc.visual](sc); });
+
+const FX = [];
+const fx = (sc, t, name, g = 1) => FX.push({ t: sc.T + t, name, g });
+scenes.forEach(sc => {
+  const q = sc.q;
+  if (sc.i > 0) FX.push({ t: sc.T - 0.05, name: 'whoosh', g: 0.5 });
+  if (sc.visual === 'hook') q.chips.forEach(t => fx(sc, t, 'pop'));
+  if (sc.visual === 'predict') { fx(sc, q.model, 'pop'); q.flow.forEach(t => fx(sc, t, 'tick')); q.rows.forEach(t => fx(sc, t, 'tick', 0.6)); fx(sc, q.hi, 'chime', 0.7); fx(sc, q.pick, 'pop'); fx(sc, q.tok, 'pop'); }
+  if (sc.visual === 'train') { fx(sc, q.guess, 'wrong', 0.8); fx(sc, q.fix, 'success', 0.8); q.chips.forEach(t => fx(sc, t, 'pop')); fx(sc, q.no, 'wrong', 0.7); fx(sc, q.yes, 'success', 0.8); }
+  if (sc.visual === 'fluent') { q.words.forEach(t => fx(sc, t, 'pop')); fx(sc, q.stamp, 'stamp', 0.9); fx(sc, q.verdict, 'success', 0.7); fx(sc, q.verdict + 0.15, 'wrong', 0.6); }
+  if (sc.visual === 'goodbad') { q.strong.forEach(t => fx(sc, t, 'tick')); q.weak.forEach(t => fx(sc, t, 'tick')); }
+  if (sc.visual === 'rule') q.checks.forEach(t => fx(sc, t, 'tick', 1.1));
+  if (sc.visual === 'recap') { q.lines.forEach(t => fx(sc, t, 'pop')); fx(sc, q.next, 'pop'); fx(sc, q.end, 'success', 0.9); }
+  if (sc.visual === 'statement') q.items.forEach(t => fx(sc, t, 'pop', 0.8));
+  if (sc.visual === 'steps') { if (sc.data.title) fx(sc, q.title, 'pop', 0.8); q.items.forEach(t => fx(sc, t, 'tick', 1.1)); if (sc.data.foot) fx(sc, q.foot, 'pop', 0.8); }
+  if (sc.visual === 'compare') sc.data.cards.forEach((c, i) => fx(sc, q.items[i], c.tone === 'no' ? 'wrong' : 'success', 0.8));
+  if (sc.visual === 'example') { q.prompt.forEach(t => fx(sc, t, 'tick', 1.1)); q.chips.forEach(t => fx(sc, t, 'pop', 0.7)); fx(sc, q.answer, sc.data.answerTone === 'bad' ? 'wrong' : 'success', 0.8); }
+});
+
+// ── captions ──
+function chunks(text) {
+  const parts = text.match(/[^.?:;,]+[.?:;,]?\s*/g).map(s => s.trim()).filter(Boolean);
+  const out = [];
+  for (const p of parts) {
+    const last = out[out.length - 1];
+    if (last && (last + ' ' + p).split(' ').length <= 8 && !/[.?]$/.test(last)) out[out.length - 1] = last + ' ' + p; else out.push(p);
+  }
+  return out.flatMap(c => { const w = c.split(' '); return w.length > 9 ? [w.slice(0, Math.ceil(w.length / 2)).join(' '), w.slice(Math.ceil(w.length / 2)).join(' ')] : [c]; });
+}
+const CAPS = [];
+scenes.forEach(sc => sc.text.forEach((tx, k) => {
+  const cs = chunks(tx), len = cs.reduce((n, c) => n + c.length, 0); let acc = 0;
+  const last = sc.visual === 'recap' && k === 2;
+  cs.forEach(c => { const a = sc.T + sc.at[k] + sc.dur[k] * acc / len; acc += c.length; CAPS.push({ a, b: sc.T + sc.at[k] + sc.dur[k] * acc / len + 0.15, text: c, hide: last }); });
+}));
+
+// ── drawing helpers ──
+let ctx, SA = 1;
+const al = a => { ctx.globalAlpha = SA * clamp(a); };
+function txt(s, x, y, o = {}) { const { size = 48, weight = 600, color = C.white, align = 'center', a = 1, base = 'middle' } = o; ctx.font = `${weight} ${size}px ${FONT}`; ctx.textAlign = align; ctx.textBaseline = base; ctx.fillStyle = color; al(a); ctx.fillText(s, x, y); }
+function box(x, y, w, h, r, fill, stroke, a = 1, lw = 2) { al(a); rr(x, y, w, h, r); if (fill) { ctx.fillStyle = fill; ctx.fill(); } if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); } }
+const vis = (t, a, b, fi = 0.35, fo = 0.3) => E.outCubic(prog(t, a, a + fi)) * (1 - E.outCubic(prog(t, b - fo, b)));
+const popK = (t, t0, d = 0.4) => E.outBack(prog(t, t0, t0 + d));
+function scaled(x, y, s, fn) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.translate(-x, -y); fn(); ctx.restore(); }
+function check(x, y, s, color, a = 1) { al(a); ctx.strokeStyle = color; ctx.lineWidth = 7 * s; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(x - 14 * s, y); ctx.lineTo(x - 4 * s, y + 11 * s); ctx.lineTo(x + 16 * s, y - 12 * s); ctx.stroke(); }
+function cross(x, y, s, color, a = 1) { al(a); ctx.strokeStyle = color; ctx.lineWidth = 7 * s; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - 12 * s, y - 12 * s); ctx.lineTo(x + 12 * s, y + 12 * s); ctx.moveTo(x + 12 * s, y - 12 * s); ctx.lineTo(x - 12 * s, y + 12 * s); ctx.stroke(); }
+function bang(x, y, s, color, a = 1) { txt('!', x, y + 1, { size: 40 * s, weight: 800, color, a }); }
+function lines(arr, x, y, lh, o = {}) { arr.forEach((l, i) => txt(l, x, y + i * lh, o)); }
+const kicker = (t, sc) => { if (sc.kicker) txt(sc.kicker, CX, 352, { size: 30, weight: 700, color: C.cyan, a: E.outCubic(prog(t, 0.1, 0.6)) }); };
+
+function drawGround(t) {
+  ctx.globalAlpha = 1; ctx.fillStyle = C.app; ctx.fillRect(0, 0, W, H);
+  const g = ctx.createRadialGradient(540, 760, 30, 540, 760, 950); g.addColorStop(0, 'rgba(34,211,238,0.09)'); g.addColorStop(1, 'rgba(10,12,16,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(127,178,255,0.025)'; for (let x = 20; x < W; x += 40) ctx.fillRect(x, 0, 1, H); for (let y = 20; y < H; y += 40) ctx.fillRect(0, y, W, 1);
+  let s = 20261111; const R = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+  for (let i = 0; i < 22; i++) { const x0 = R() * W, y0 = R() * H, r = 1 + R() * 2, sp = 8 + R() * 16, ph = R() * 6.28; ctx.globalAlpha = 0.12 + 0.08 * Math.sin(t * 0.7 + ph); ctx.fillStyle = C.cyan; ctx.beginPath(); ctx.arc((x0 + Math.sin(t * 0.3 + ph) * sp + W) % W, (y0 + Math.cos(t * 0.2 + ph * 1.3) * sp * 0.6 + H) % H, r, 0, 6.28); ctx.fill(); }
+  ctx.globalAlpha = 0.15; ctx.fillStyle = C.dim; rr(60, 1840, W - 120, 4, 2); ctx.fill();
+  ctx.globalAlpha = 0.8; ctx.fillStyle = C.cyan; rr(60, 1840, (W - 120) * (t / total), 4, 2); ctx.fill(); ctx.globalAlpha = 1;
+}
+function drawBadge(t) {
+  const end = scenes.at(-1).T + scenes.at(-1).at[2] - 0.2;
+  const a = E.outCubic(prog(t, 0.1, 0.8)) * (1 - E.outCubic(prog(t, end, end + 0.4)));
+  if (a <= 0.01) return; SA = 1;
+  const label = `LESSON ${script.n} of ${script.of}`; ctx.font = `700 30px ${FONT}`; const pw = ctx.measureText(label).width + 48;
+  box(540 - pw / 2, 248, pw, 48, 24, 'rgba(34,211,238,0.08)', 'rgba(34,211,238,0.25)', a, 1.5);
+  txt(label, 540, 272, { size: 30, weight: 700, color: C.cyan, a }); txt(script.arc, 540, 318, { size: 24, weight: 500, color: C.muted, a });
+}
+function drawCaption(t) {
+  const c = CAPS.find(c => t >= c.a && t < c.b); if (!c || c.hide) return; SA = 1;
+  const a = E.outCubic(prog(t, c.a, c.a + 0.12));
+  ctx.font = `700 52px ${FONT}`; const words = c.text.split(' '), ls = []; let cur = '';
+  for (const w of words) { const n = cur ? cur + ' ' + w : w; if (ctx.measureText(n).width > 780 && cur) { ls.push(cur); cur = w; } else cur = n; } ls.push(cur);
+  const wmax = Math.max(...ls.map(l => ctx.measureText(l).width)), h = ls.length * 70 + 28, y0 = 1470 - h / 2;
+  box(CX - wmax / 2 - 32, y0, wmax + 64, h, 24, 'rgba(10,12,16,0.74)', null, a);
+  ls.forEach((l, i) => txt(l, CX, y0 + 14 + 35 + i * 70, { size: 52, weight: 700, color: C.white, a }));
+}
+
+// ── generic-scene helpers ──
+const COL = { white: C.white, text: C.text, muted: C.muted, cyan: C.cyan, green: C.green, amber: C.amber, red: C.red };
+const colr = k => COL[k] || C.white;
+function wrapLines(s, size, weight, maxW) { ctx.font = `${weight} ${size}px ${FONT}`; const out = []; let cur = ''; for (const w of s.split(' ')) { const n = cur ? cur + ' ' + w : w; if (ctx.measureText(n).width > maxW && cur) { out.push(cur); cur = w; } else cur = n; } out.push(cur); return out; }
+function fitSize(s, size, weight, maxW) { ctx.font = `${weight} ${size}px ${FONT}`; const w = ctx.measureText(s).width; return w > maxW ? Math.floor(size * maxW / w) : size; }
+
+// ── scenes ──
+const SCENE = {
+  hook(t, sc) {
+    const q = sc.q, h = E.outCubic(prog(t, sc.at[0], sc.at[0] + 0.6)), gone = prog(t, q.q - 0.1, q.q + 0.5), A1 = h * (1 - gone);
+    txt('You have used AI', CX, 520, { size: 92, weight: 800, a: A1 }); txt('already today.', CX, 626, { size: 92, weight: 800, color: C.cyan, a: A1 });
+    ['A search suggestion', 'An autocorrected word', 'A recommended video'].forEach((lab, i) => {
+      const y = 840 + i * 135, s = popK(t, q.chips[i]);
+      scaled(CX, y, Math.max(0.01, s), () => {
+        box(150, y - 52, 700, 104, 28, C.panel2, 'rgba(34,211,238,0.3)', A1 * (s > 0 ? 1 : 0));
+        if (i === 0) { al(A1); ctx.strokeStyle = C.cyan; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(205, y - 5, 16, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(217, y + 7); ctx.lineTo(232, y + 22); ctx.stroke(); }
+        if (i === 1) txt('Aa', 215, y, { size: 44, weight: 800, color: C.cyan, a: A1 });
+        if (i === 2) { al(A1); ctx.fillStyle = C.cyan; ctx.beginPath(); ctx.moveTo(195, y - 18); ctx.lineTo(225, y); ctx.lineTo(195, y + 18); ctx.fill(); }
+        txt(lab, 270, y, { size: 42, weight: 600, align: 'left', a: A1 });
+      });
+    });
+    const qa = vis(t, q.q, q.ring - 0.1);
+    txt('?', CX, 700, { size: 380, weight: 800, color: C.cyan, a: qa * (0.75 + 0.25 * Math.sin(t * 4)) });
+    lines(['What does it', 'actually do?'], CX, 1010, 84, { size: 72, weight: 800, a: qa });
+    const ra = E.outCubic(prog(t, q.ring, q.ring + 0.4)), p = prog(t, q.ring, q.ring + sc.dur[3]);
+    al(ra); ctx.strokeStyle = C.dim; ctx.lineWidth = 16; ctx.beginPath(); ctx.arc(CX, 830, 190, 0, 7); ctx.stroke();
+    al(ra); ctx.strokeStyle = C.cyan; ctx.lineWidth = 16; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(CX, 830, 190, -Math.PI / 2, -Math.PI / 2 + p * Math.PI * 2); ctx.stroke();
+    lines(['A few', 'minutes'], CX, 800, 80, { size: 68, weight: 800, a: ra });
+    txt("You'll be able to explain it.", CX, 1130, { size: 50, weight: 600, color: C.text, a: ra });
+  },
+
+  predict(t, sc) {
+    const q = sc.q; kicker(t, sc);
+    // k0 pill
+    const a0 = vis(t, q.model, sc.at[1] - 0.1);
+    scaled(CX, 640, Math.max(0.01, popK(t, q.model)), () => { box(110, 560, 780, 150, 40, 'rgba(34,211,238,0.10)', C.cyan, a0, 3); txt('LARGE LANGUAGE MODEL', CX, 635, { size: 50, weight: 800, color: C.cyan, a: a0 }); });
+    lines(['the engine inside chatbots', 'and writing assistants'], CX, 800, 52, { size: 40, weight: 500, color: C.text, a: a0 });
+    // k1 flow
+    const f = vis(t, sc.at[1] - 0.05, sc.at[2] - 0.1);
+    [['Text so far', 560, C.panel2, C.text], ['MODEL', 790, 'rgba(34,211,238,0.14)', C.cyan], ['Likely next word', 1020, C.panel2, C.green]].forEach(([lab, y, fill, col], i) => {
+      const s = popK(t, q.flow[i]); scaled(CX, y, Math.max(0.01, s), () => { box(150, y - 62, 700, 124, 30, fill, col, f * (s > 0 ? 1 : 0), 2.5); txt(lab, CX, y, { size: 54, weight: 700, color: col, a: f * (s > 0 ? 1 : 0) }); });
+      if (i < 2) { const aa = f * E.outCubic(prog(t, q.flow[i] + 0.2, q.flow[i] + 0.6)); txt('↓', CX, y + 106, { size: 60, weight: 700, color: C.muted, a: aa }); }
+    });
+    // k2-k4 sentence + candidates
+    const w = vis(t, sc.at[2] - 0.05, sc.at[5] - 0.1);
+    box(70, 450, 860, 170, 30, C.panel2, 'rgba(34,211,238,0.3)', w, 2);
+    const base = 'The capital of France is'; ctx.font = `600 54px ${FONT}`; const bw = ctx.measureText(base + ' ').width;
+    txt(base, 110, 535, { size: 54, weight: 600, align: 'left', a: w });
+    const picked = t >= q.pick;
+    if (picked) { const s = popK(t, q.pick, 0.35); txt('Paris', 110 + bw, 535, { size: 54, weight: 800, color: C.green, align: 'left', a: w * Math.min(1, s) }); ctx.font = `800 54px ${FONT}`; const pw = ctx.measureText('Paris').width; if (t >= q.rep) txt('.', 110 + bw + pw + 4, 535, { size: 54, weight: 800, align: 'left', a: w }); }
+    else if (Math.floor(t * 2.2) % 2 === 0) { al(w); ctx.fillStyle = C.cyan; ctx.fillRect(110 + bw + 4, 505, 5, 60); }
+    const cands = [['Paris', 94], ['Lyon', 2], ['a', 1.5], ['the', 1], ['located', 0.8]];
+    const dimC = picked ? 0.22 : 1;
+    cands.forEach(([lab, p], i) => {
+      const y = 700 + i * 100, ra = E.outCubic(prog(t, q.rows[i], q.rows[i] + 0.3)) * w, hi = i === 0 && t >= q.hi && !picked;
+      const isTop = i === 0, a = ra * (isTop ? (picked ? 0.9 : 1) : (t >= q.hi ? 0.35 : 1) * dimC);
+      if (hi) box(80, y - 42, 840, 84, 22, 'rgba(25,224,143,0.10)', C.green, ra, 3);
+      txt(lab, 120, y, { size: 44, weight: isTop ? 800 : 600, color: isTop ? C.green : C.text, align: 'left', a });
+      const bwid = Math.max(8, (p / 94) * 430) * E.outCubic(prog(t, q.rows[i] + 0.05, q.rows[i] + 0.6));
+      box(340, y - 18, bwid, 36, 10, isTop ? C.green : C.cyan, null, a * (isTop ? 1 : 0.7));
+      txt(p + '%', 340 + bwid + 20, y, { size: 38, weight: 700, color: C.text, align: 'left', a });
+    });
+    txt('illustrative numbers', CX, 1215, { size: 28, weight: 500, color: C.faint, a: w * 0.9 });
+    if (picked) { const ra = w * E.outCubic(prog(t, q.rep, q.rep + 0.4)) * (0.7 + 0.3 * Math.sin(t * 5)); al(ra); ctx.strokeStyle = C.cyan; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(390, 1135, 26, -0.4, 4.6); ctx.stroke(); ctx.fillStyle = C.cyan; ctx.beginPath(); ctx.moveTo(402, 1100); ctx.lineTo(426, 1118); ctx.lineTo(398, 1128); ctx.fill(); txt('repeat', 470, 1135, { size: 54, weight: 700, color: C.cyan, align: 'left', a: ra }); }
+    // k5 tokens
+    const tk = vis(t, sc.at[5] - 0.05, sc.D, 0.35, 0.01);
+    if (tk > 0.01) {
+      const split = E.inOutCubic(prog(t, q.tok, q.tok + 0.9)), parts = ['un', 'believ', 'able'];
+      txt('unbelievable', CX, 640, { size: 96, weight: 800, a: tk * (1 - split) });
+      ctx.font = `800 80px ${FONT}`; const ws = parts.map(p => ctx.measureText(p).width + 60); const gap = 30 * split, totw = ws.reduce((a, b) => a + b, 0) + gap * 2; let x = CX - totw / 2;
+      parts.forEach((p, i) => { box(x, 585, ws[i], 110, 26, 'rgba(34,211,238,0.12)', C.cyan, tk * split, 2.5); txt(p, x + ws[i] / 2, 641, { size: 80, weight: 800, color: C.cyan, a: tk * split }); x += ws[i] + gap; });
+      txt('tokens', CX, 770, { size: 48, weight: 700, color: C.green, a: tk * split });
+      txt('often parts of words', CX, 840, { size: 40, weight: 500, color: C.text, a: tk * split });
+    }
+  },
+
+  train(t, sc) {
+    const q = sc.q; kicker(t, sc);
+    const a0 = vis(t, q.pages, sc.at[1] - 0.1);
+    if (a0 > 0.01) {
+      ctx.save(); ctx.beginPath(); ctx.rect(70, 430, 860, 620); ctx.clip();
+      for (let i = 0; i < 6; i++) {
+        const off = ((t - q.pages) * 70 + i * 170) % 1020, y = 1050 - off;
+        box(130, y, 740, 140, 20, C.panel2, 'rgba(148,163,184,0.25)', a0 * (0.4 + 0.6 * E.outCubic(prog(t, q.pages + i * 0.12, q.pages + 0.6 + i * 0.12))));
+        for (let b = 0; b < 4; b++) box(160, y + 24 + b * 26, 520 + ((i * 37 + b * 61) % 120) - (b === 3 ? 220 : 0), 10, 5, 'rgba(148,163,184,0.45)', null, a0);
+      }
+      ctx.restore();
+      txt('Enormous amounts of written text', CX, 1130, { size: 44, weight: 700, color: C.white, a: a0 });
+    }
+    const a1 = vis(t, sc.at[1] - 0.05, sc.at[2] - 0.1);
+    if (a1 > 0.01) {
+      box(70, 470, 860, 190, 30, C.panel2, 'rgba(34,211,238,0.3)', a1, 2);
+      const lead = 'The cat sat on the'; ctx.font = `600 58px ${FONT}`; const lw = ctx.measureText(lead + ' ').width;
+      txt(lead, 110, 565, { size: 58, weight: 600, align: 'left', a: a1 });
+      const guessed = t >= q.guess, fixed = t >= q.fix;
+      if (!guessed) { al(a1); ctx.fillStyle = C.cyan; ctx.fillRect(110 + lw, 595, 150, 5); txt('?', 110 + lw + 75, 560, { size: 54, weight: 800, color: C.cyan, a: a1 }); }
+      else { const word = fixed ? 'mat' : 'dog', col = fixed ? C.green : C.red; txt(word, 110 + lw, 565, { size: 58, weight: 800, color: col, align: 'left', a: a1 }); ctx.font = `800 58px ${FONT}`; const ww = ctx.measureText(word).width; if (fixed) check(110 + lw + ww + 50, 563, 1.3, C.green, a1); else cross(110 + lw + ww + 50, 563, 1.3, C.red, a1); }
+      [['1', 'Hide a word', q.hide], ['2', 'Guess it', q.guess], ['3', 'Get corrected', q.fix]].forEach(([n, lab, tt], i) => {
+        const y = 790 + i * 130, s = popK(t, tt, 0.35); scaled(CX, y, Math.max(0.01, s), () => { box(110, y - 48, 780, 96, 26, C.panel2, 'rgba(34,211,238,0.25)', a1 * (s > 0 ? 1 : 0)); txt(n, 165, y, { size: 46, weight: 800, color: C.cyan, a: a1 * (s > 0 ? 1 : 0) }); txt(lab, 230, y, { size: 46, weight: 600, align: 'left', a: a1 * (s > 0 ? 1 : 0) }); });
+      });
+    }
+    const a2 = vis(t, sc.at[2] - 0.05, sc.at[3] - 0.1);
+    if (a2 > 0.01) {
+      lines(['Billions of', 'repetitions'], CX, 560, 100, { size: 88, weight: 800, a: a2 });
+      ['Grammar', 'Common facts', 'Styles of writing'].forEach((lab, i) => { const y = 860 + i * 130, s = popK(t, q.chips[i]); scaled(CX, y, Math.max(0.01, s), () => { box(150, y - 50, 700, 100, 28, C.panel2, 'rgba(25,224,143,0.4)', a2 * (s > 0 ? 1 : 0)); txt(lab, CX, y, { size: 48, weight: 700, color: C.green, a: a2 * (s > 0 ? 1 : 0) }); }); });
+    }
+    const a3 = vis(t, sc.at[3] - 0.05, sc.D, 0.35, 0.01);
+    if (a3 > 0.01) {
+      const rows = [[470, 'DATABASE', 'Looks up a stored answer', C.muted, 'no'], [830, 'LANGUAGE MODEL', 'Generates new text from learned patterns', C.cyan, 'yes']];
+      rows.forEach(([y, title, body, col, kind], i) => {
+        const on = kind === 'no' ? t >= q.no : t >= q.yes, glow = kind === 'yes' && on;
+        box(70, y, 860, 300, 34, glow ? 'rgba(34,211,238,0.10)' : C.panel2, glow ? C.cyan : 'rgba(148,163,184,0.3)', a3, glow ? 3.5 : 2);
+        txt(title, 120, y + 70, { size: 40, weight: 800, color: col, align: 'left', a: a3 });
+        const bl = []; ctx.font = `600 52px ${FONT}`; let cur = ''; for (const w of body.split(' ')) { const n = cur ? cur + ' ' + w : w; if (ctx.measureText(n).width > 700 && cur) { bl.push(cur); cur = w; } else cur = n; } bl.push(cur);
+        bl.forEach((l, j) => txt(l, 120, y + 150 + j * 62, { size: 52, weight: 600, align: 'left', a: a3 }));
+        if (on) { const s = popK(t, kind === 'no' ? q.no : q.yes, 0.4); if (kind === 'no') cross(840, y + 70, 1.6 * Math.min(1, s), C.red, a3); else check(840, y + 70, 1.6 * Math.min(1, s), C.green, a3); }
+      });
+    }
+  },
+
+  fluent(t, sc) {
+    const q = sc.q; kicker(t, sc);
+    const a0 = vis(t, sc.at[0] - 0.05, sc.at[1] - 0.1);
+    lines(['The part most', 'people get wrong.'], CX, 640, 112, { size: 96, weight: 800, a: a0 });
+    box(150, 835, 700 * E.outCubic(prog(t, sc.at[0], sc.at[0] + 0.9)), 8, 4, C.amber, null, a0);
+    const a1 = vis(t, sc.at[1] - 0.05, sc.at[2] - 0.1), w = q.words;
+    txt('FLUENT', CX, 570, { size: 120, weight: 800, color: C.cyan, a: a1 * popK(t, w[0], 0.3) });
+    txt('≠', CX, 770, { size: 190, weight: 800, color: C.amber, a: a1 * popK(t, w[1], 0.3) });
+    txt('TRUE', CX, 970, { size: 120, weight: 800, color: C.green, a: a1 * popK(t, w[2], 0.3) });
+    const a2 = vis(t, sc.at[2] - 0.05, sc.at[4] - 0.1);
+    if (a2 > 0.01) {
+      box(90, 450, 820, 440, 30, C.panel2, 'rgba(148,163,184,0.3)', a2, 2); txt('REFERENCE', 135, 505, { size: 28, weight: 700, color: C.faint, align: 'left', a: a2 });
+      ['Whitmore, A., & Chen, L. (2019).', 'The Cognitive Economy of Habit.', 'Journal of Applied Behavioral Science,', '44(2), 211–230.'].forEach((l, i) => txt(l, 135, 590 + i * 70, { size: 44, weight: i === 1 ? 700 : 500, color: i === 1 ? C.white : C.text, align: 'left', a: a2 * E.outCubic(prog(t, q.lines[i], q.lines[i] + 0.35)) }));
+      if (t >= q.stamp) { const s = E.outBack(prog(t, q.stamp, q.stamp + 0.3), 2.4), ang = -0.14; ctx.save(); ctx.translate(CX, 830); ctx.rotate(ang); ctx.scale(2 - s, 2 - s); box(-310, -62, 620, 124, 18, 'rgba(10,12,16,0.92)', C.red, a2 * clamp(s), 6); txt('DOES NOT EXIST', 0, 0, { size: 62, weight: 800, color: C.red, a: a2 * clamp(s) }); ctx.restore(); txt('This is a hallucination.', CX, 960, { size: 50, weight: 700, color: C.white, a: a2 * E.outCubic(prog(t, q.stamp + 0.3, q.stamp + 0.7)) }); txt('A fluent answer with no basis in fact.', CX, 1030, { size: 38, weight: 500, color: C.muted, a: a2 * E.outCubic(prog(t, q.stamp + 0.6, q.stamp + 1.0)) }); }
+    }
+    const a4 = vis(t, sc.at[4] - 0.05, sc.D, 0.35, 0.01);
+    if (a4 > 0.01) {
+      [[480, 'ANSWER A', 'Mount Everest is 8,849 meters tall.', true], [800, 'ANSWER B', 'Mount Everest is 7,849 meters tall.', false]].forEach(([y, lab, body, ok]) => {
+        box(90, y, 820, 250, 34, 'rgba(34,211,238,0.08)', 'rgba(34,211,238,0.5)', a4, 2.5); txt(lab, 135, y + 52, { size: 30, weight: 700, color: C.cyan, align: 'left', a: a4 });
+        ctx.font = `600 52px ${FONT}`; const bl = []; let cur = ''; for (const w of body.split(' ')) { const n = cur ? cur + ' ' + w : w; if (ctx.measureText(n).width > 740 && cur) { bl.push(cur); cur = w; } else cur = n; } bl.push(cur);
+        bl.forEach((l, j) => txt(l, 135, y + 130 + j * 62, { size: 52, weight: 600, align: 'left', a: a4 }));
+        const s = popK(t, q.verdict + (ok ? 0 : 0.15), 0.4);
+        if (t >= q.verdict) { box(560, y + 18, 320, 62, 31, ok ? 'rgba(25,224,143,0.15)' : 'rgba(239,68,68,0.15)', ok ? C.green : C.red, a4 * clamp(s), 2); txt(ok ? 'correct' : 'wrong', 720, y + 49, { size: 34, weight: 800, color: ok ? C.green : C.red, a: a4 * clamp(s) }); }
+      });
+      txt('Same tone. Same confidence.', CX, 1130, { size: 46, weight: 700, color: C.amber, a: a4 * E.outCubic(prog(t, q.verdict + 0.4, q.verdict + 0.9)) });
+    }
+  },
+
+  goodbad(t, sc) {
+    const q = sc.q; kicker(t, sc);
+    const p1 = E.outCubic(prog(t, 0.3, 0.8));
+    box(70, 420, 860, 470, 34, C.panel2, 'rgba(25,224,143,0.45)', p1, 2.5); txt('STRONG', 120, 478, { size: 34, weight: 800, color: C.green, align: 'left', a: p1 });
+    ['Drafting', 'Summarizing', 'Rewriting', 'Explaining', 'Organizing text'].forEach((l, i) => { const a = E.outCubic(prog(t, q.strong[i], q.strong[i] + 0.35)); check(130, 555 + i * 68, 0.9, C.green, a); txt(l, 175, 555 + i * 68, { size: 46, weight: 600, align: 'left', a }); });
+    const p2 = E.outCubic(prog(t, q.p2 - 0.1, q.p2 + 0.4));
+    box(70, 930, 860, 410, 34, C.panel2, 'rgba(245,158,11,0.5)', p2, 2.5); txt('WEAK ON ITS OWN', 120, 988, { size: 34, weight: 800, color: C.amber, align: 'left', a: p2 });
+    ['Exact facts', 'Recent events', 'Arithmetic', 'Details where a small error matters'].forEach((l, i) => { const a = E.outCubic(prog(t, q.weak[i], q.weak[i] + 0.35)); bang(130, 1065 + i * 68, 0.9, C.amber, a); txt(l, 175, 1065 + i * 68, { size: i === 3 ? 38 : 46, weight: 600, align: 'left', a }); });
+  },
+
+  rule(t, sc) {
+    const q = sc.q; kicker(t, sc);
+    const m = E.inOutCubic(prog(t, sc.at[1] - 0.1, sc.at[1] + 0.6)), ha = E.outCubic(prog(t, sc.at[0], sc.at[0] + 0.5));
+    txt('You stay the author.', CX, lerp(760, 470, m), { size: lerp(88, 62, m), weight: 800, a: ha });
+    ['Names', 'Numbers', 'Dates', 'Quotes'].forEach((lab, i) => {
+      const y = 620 + i * 118, ra = E.outCubic(prog(t, sc.at[1] + i * 0.05, sc.at[1] + 0.4 + i * 0.05)) * (1 - E.outCubic(prog(t, sc.at[2], sc.at[2] + 0.1)) * 0);
+      box(150, y - 46, 700, 92, 26, C.panel2, 'rgba(34,211,238,0.28)', ra, 2); box(185, y - 24, 48, 48, 12, null, C.cyan, ra, 3);
+      if (t >= q.checks[i]) check(209, y, 1.1 * Math.min(1, popK(t, q.checks[i], 0.3)), C.green, ra);
+      txt(lab, 270, y, { size: 50, weight: 600, align: 'left', a: ra });
+    });
+    const ba = E.outCubic(prog(t, q.bars, q.bars + 0.4)), g = prog(t, q.bars + 0.3, q.bars + sc.dur[2] * 0.85);
+    [['How much it matters', 1180, C.amber], ['How much you verify', 1290, C.green]].forEach(([lab, y, col], i) => { txt(lab, 110, y - 30, { size: 32, weight: 600, color: C.text, align: 'left', a: ba }); box(110, y - 8, 760, 26, 13, 'rgba(148,163,184,0.15)', null, ba); box(110, y - 8, Math.max(2, 760 * E.inOutCubic(clamp(g - (i ? 0.08 : 0) , 0, 1))), 26, 13, col, null, ba); });
+  },
+
+  recap(t, sc) {
+    const q = sc.q; if (t < q.end) kicker(t, sc);
+    const a0 = (1 - 0.7 * E.outCubic(prog(t, q.next, q.next + 0.4))) * (1 - E.outCubic(prog(t, q.end - 0.25, q.end + 0.1)));
+    (sc.data ? sc.data.lines.map(l => l.text) : ['Predicts likely text', 'Learned patterns, not facts', 'Equally sure, right or wrong']).forEach((l, i) => {
+      const y = 520 + i * 150, s = popK(t, q.lines[i], 0.4); scaled(CX, y, Math.max(0.01, s), () => { box(90, y - 56, 820, 112, 30, C.panel2, 'rgba(34,211,238,0.3)', a0 * (s > 0 ? 1 : 0)); txt(String(i + 1), 150, y, { size: 52, weight: 800, color: C.cyan, a: a0 * (s > 0 ? 1 : 0) }); txt(l, 215, y, { size: 44, weight: 700, align: 'left', a: a0 * (s > 0 ? 1 : 0) }); });
+    });
+    const na = vis(t, q.next, q.end - 0.1);
+    txt((script.n >= script.of ? 'COURSE COMPLETE' : 'NEXT LESSON'), CX, 1030, { size: 30, weight: 700, color: C.green, a: na });
+    ctx.font = `700 50px ${FONT}`; const nl = []; let cur = ''; for (const w of ((script.n >= script.of) ? (sc.next || "Thank you for learning with us") : `Lesson ${(script.n || 1) + 1}: ${sc.next}`).split(' ')) { const n = cur ? cur + ' ' + w : w; if (ctx.measureText(n).width > 780 && cur) { nl.push(cur); cur = w; } else cur = n; } nl.push(cur);
+    nl.forEach((l, i) => txt(l, CX, 1100 + i * 64, { size: 50, weight: 700, a: na }));
+    const ea = E.outCubic(prog(t, q.end, q.end + 0.5));
+    if (ea > 0.01) {
+      ctx.fillStyle = 'rgba(10,12,16,' + (0.97 * ea) + ')'; SA = 1; ctx.globalAlpha = 1; ctx.fillRect(0, 380, W, 1100);
+      txt('Be the cog in the machine.', CX, 700, { size: 58, weight: 800, a: ea }); txt('Tools that work for you.', CX, 775, { size: 58, weight: 800, color: C.green, a: E.outCubic(prog(t, q.end + 0.2, q.end + 0.7)) });
+      txt('brokengearindustries.com', CX, 900, { size: 38, weight: 500, color: C.muted, a: E.outCubic(prog(t, q.end + 0.5, q.end + 1.0)) });
+      const pa = E.outCubic(prog(t, q.end + 0.8, q.end + 1.3)); ctx.font = `700 34px ${FONT}`; const lab = 'Follow for more AI literacy ▶', pw = ctx.measureText(lab).width + 64;
+      box(CX - pw / 2, 990, pw, 66, 33, C.accent, null, pa); txt(lab, CX, 1023, { size: 34, weight: 700, color: '#000', a: pa });
+    }
+  },
+
+  // ── generic scenes (data-driven, see SKILL.md "Generic scenes") ──
+  // statement: big centered lines. data.lines = [{ text, color?, size?, y?, on:[k,'word'], off?:[k,'word'] }]
+  statement(t, sc) {
+    const q = sc.q, d = sc.data; kicker(t, sc); const n = d.lines.length;
+    d.lines.forEach((l, i) => {
+      const a0 = E.outCubic(prog(t, q.items[i], q.items[i] + 0.5)), a = a0 * (1 - E.outCubic(prog(t, q.offs[i], q.offs[i] + 0.35)));
+      if (a <= 0.005) return;
+      const y = (l.y != null ? l.y : 700 + (i - (n - 1) / 2) * 118) + (1 - a0) * 20;
+      txt(l.text, CX, y, { size: fitSize(l.text, l.size || 88, l.weight || 800, 860), weight: l.weight || 800, color: colr(l.color), a });
+    });
+  },
+
+  // steps: stacked cards. data = { title?:{text,color?,on}, bullets?:'check', items:[{ label, sub?, color?, on }] }
+  steps(t, sc) {
+    const q = sc.q, d = sc.data; kicker(t, sc);
+    const hasSub = d.items.some(i => i.sub), h = hasSub ? 132 : 104, step = hasSub ? 152 : 124, y0 = d.y0 || (d.title ? 650 : 560);
+    if (d.title) { const a = E.outCubic(prog(t, q.title, q.title + 0.5)); txt(d.title.text, CX, 480 + (1 - a) * 18, { size: fitSize(d.title.text, 76, 800, 860), weight: 800, color: colr(d.title.color), a }); }
+    if (d.foot) { const a = E.outCubic(prog(t, q.foot, q.foot + 0.5)); txt(d.foot.text, CX, y0 + (d.items.length - 1) * step + h / 2 + 76 + (1 - a) * 14, { size: fitSize(d.foot.text, 50, 800, 860), weight: 800, color: colr(d.foot.color), a }); }
+    d.items.forEach((it, i) => {
+      const y = y0 + i * step, s = popK(t, q.items[i], 0.4), on = s > 0 ? 1 : 0, col = colr(it.color || 'cyan');
+      scaled(CX, y, Math.max(0.01, s), () => {
+        box(110, y - h / 2, 780, h, 28, C.panel2, null, on); box(110, y - h / 2, 780, h, 28, null, col, on * 0.55, 2);
+        if (d.bullets === 'check') check(172, y, 1.0, col, on); else if (d.bullets === 'cross') cross(172, y, 1.0, col, on); else txt(String(i + 1), 172, y, { size: 48, weight: 800, color: col, a: on });
+        txt(it.label, 235, y - (it.sub ? 20 : 0), { size: fitSize(it.label, 46, 700, 620), weight: 700, align: 'left', a: on });
+        if (it.sub) txt(it.sub, 235, y + 30, { size: fitSize(it.sub, 32, 500, 620), weight: 500, color: C.muted, align: 'left', a: on });
+      });
+    });
+  },
+
+  // compare: two stacked cards. data.cards = [{ title, body, tone:'no'|'yes', color?, on }]
+  compare(t, sc) {
+    const q = sc.q, d = sc.data; kicker(t, sc);
+    d.cards.forEach((c, i) => {
+      const y = 470 + i * 380, a = E.outCubic(prog(t, q.items[i] - 0.1, q.items[i] + 0.4)), no = c.tone === 'no', col = colr(c.color || (no ? 'muted' : 'cyan'));
+      if (a <= 0.005) return;
+      box(70, y, 860, 320, 34, no ? C.panel2 : 'rgba(34,211,238,0.10)', no ? 'rgba(148,163,184,0.3)' : C.cyan, a, no ? 2 : 3.5);
+      txt(c.title, 120, y + 66, { size: 38, weight: 800, color: col, align: 'left', a });
+      wrapLines(c.body, 52, 600, 700).forEach((l, j) => txt(l, 120, y + 150 + j * 62, { size: 52, weight: 600, align: 'left', a }));
+      const s = popK(t, q.items[i] + 0.15, 0.4); if (no) cross(840, y + 66, 1.6 * Math.min(1, s), C.red, a); else check(840, y + 66, 1.6 * Math.min(1, s), C.green, a);
+    });
+    if (d.note) txt(d.note, CX, 470 + (d.cards.length - 1) * 380 + 320 + 36, { size: 28, weight: 500, color: C.faint, a: E.outCubic(prog(t, q.items.at(-1) - 0.1, q.items.at(-1) + 0.4)) * 0.9 });
+  },
+
+  // example: a "what you type" window, optional chips (questions or legend), then a "what you get" window.
+  // data = { promptLabel?, prompt:[{ text, color?, on }], chips?:[{ text, color?, on }], answerLabel?, answerOn:[k,'word'], answerTone:'bad'|'good', answerTag?:{text,color}, answer:['line',...], note? }
+  example(t, sc) {
+    const q = sc.q, d = sc.data, PX = 70, PW = 860; kicker(t, sc);
+    const y0 = d.y || 450, ph = 84 + d.prompt.length * 58 + 16, pa = E.outCubic(prog(t, 0.1, 0.6));
+    box(PX, y0, PW, ph, 30, C.panel2, null, pa); box(PX, y0, PW, ph, 30, null, 'rgba(34,211,238,0.35)', pa, 2);
+    txt(d.promptLabel || 'WHAT YOU TYPE', PX + 40, y0 + 42, { size: 26, weight: 800, color: C.cyan, align: 'left', a: pa });
+    d.prompt.forEach((l, i) => { const a = E.outCubic(prog(t, q.prompt[i], q.prompt[i] + 0.4)); txt(l.text, PX + 40, y0 + 98 + i * 58, { size: fitSize(l.text, 42, 600, PW - 90), weight: 600, color: colr(l.color), align: 'left', a }); });
+    const ch = d.chips || [], rows = Math.ceil(ch.length / 2); let yb = y0 + ph + 40;
+    ch.forEach((c, i) => {
+      const cx = PX + (i % 2) * 440, cy = yb + 8 + Math.floor(i / 2) * 80 + 32, s = popK(t, q.chips[i], 0.4), on = s > 0 ? 1 : 0, col = colr(c.color || 'cyan');
+      scaled(cx + 210, cy, Math.max(0.01, s), () => { box(cx, cy - 32, 420, 64, 32, C.panel2, null, on); box(cx, cy - 32, 420, 64, 32, null, col, on * 0.8, 2.5); txt(c.text, cx + 210, cy + 1, { size: fitSize(c.text, 32, 700, 380), weight: 700, color: col, a: on }); });
+    });
+    if (rows) yb += 16 + rows * 80;
+    const good = d.answerTone === 'good', border = good ? C.green : C.amber, ah = 84 + d.answer.length * 54 + 16, aa = E.outCubic(prog(t, q.answer - 0.1, q.answer + 0.4));
+    if (aa > 0.005) {
+      box(PX, yb, PW, ah, 30, good ? 'rgba(25,224,143,0.07)' : C.panel2, null, aa); box(PX, yb, PW, ah, 30, null, border, aa * 0.8, 2.5);
+      txt(d.answerLabel || 'WHAT YOU GET', PX + 40, yb + 42, { size: 26, weight: 800, color: border, align: 'left', a: aa });
+      d.answer.forEach((l, i) => { const a = E.outCubic(prog(t, q.alines[i], q.alines[i] + 0.35)); txt(l, PX + 40, yb + 96 + i * 54, { size: fitSize(l, 40, 500, PW - 90), weight: 500, color: C.text, align: 'left', a }); });
+      if (d.answerTag) { ctx.font = `800 26px ${FONT}`; const tw = ctx.measureText(d.answerTag.text).width + 36, ta = E.outCubic(prog(t, q.tag != null ? q.tag : q.alines.at(-1) + 0.2, (q.tag != null ? q.tag : q.alines.at(-1) + 0.2) + 0.4)), tc = colr(d.answerTag.color || (good ? 'green' : 'amber')); box(PX + PW - 30 - tw, yb + 22, tw, 40, 20, null, tc, aa * ta, 2.5); txt(d.answerTag.text, PX + PW - 30 - tw / 2, yb + 43, { size: 26, weight: 800, color: tc, a: aa * ta }); }
+      if (d.note) txt(d.note, CX, yb + ah + 34, { size: 28, weight: 500, color: C.faint, a: aa * 0.9 });
+    }
+  },
+};
+
+// ── frame ──
+const cv = createCanvas(W, H); ctx = cv.getContext('2d');
+function frame(t) {
+  drawGround(t); SA = 1;
+  for (const sc of scenes) {
+    const a0 = sc.i === 0 ? 1 : prog(t, sc.T, sc.T + X), nx = scenes[sc.i + 1], a1 = nx ? 1 - prog(t, nx.T, nx.T + X) : 1;
+    const a = Math.min(a0, a1); if (a <= 0.001 || t < sc.T || t > sc.T + sc.D) continue;
+    SA = a; ctx.globalAlpha = a; SCENE[sc.visual](t - sc.T, sc);
+  }
+  SA = 1; drawBadge(t); drawCaption(t); ctx.globalAlpha = 1;
+}
+
+// ── run ──
+const OUT = path.join(DIR, 'out'); fs.mkdirSync(OUT, { recursive: true });
+const si = rest.indexOf('--shots');
+console.log(`${script.id} [${tag}] ${total.toFixed(1)} s, ${scenes.length} scenes, ${FX.length} sound effects`);
+scenes.forEach(s => console.log(`  scene ${s.i} ${s.visual}: ${s.T.toFixed(1)}-${(s.T + s.D).toFixed(1)}`));
+if (si >= 0) {
+  fs.mkdirSync(path.join(OUT, 'shots'), { recursive: true });
+  const list = rest[si + 1] === 'auto' ? scenes.flatMap(sc => sc.text.map((_, k) => (sc.T + sc.at[k] + sc.dur[k] * 0.8).toFixed(1))) : rest[si + 1].split(',');
+  for (const ts of list) { frame(+ts); fs.writeFileSync(path.join(OUT, 'shots', `${tag}_${String(ts).padStart(5, '0')}.png`), cv.toBuffer('image/png')); }
+  console.log('shots written'); process.exit(0);
+}
+
+const silent = path.join(OUT, `${script.id}_${tag}_silent.mp4`);
+if (!(rest.includes('--reuse') && fs.existsSync(silent))) {
+  const enc = spawn(FF, ['-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${W}x${H}`, '-r', String(FPS), '-i', '-', '-vf', 'scale=out_color_matrix=bt709:out_range=tv:flags=accurate_rnd,format=yuv420p', '-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-movflags', '+faststart', silent], { stdio: ['pipe', 'ignore', 'inherit'] });
+  for (let f = 0; f < nFrames; f++) {
+    frame(f / FPS);
+    const raw = Buffer.from(ctx.getImageData(0, 0, W, H).data.buffer);
+    if (!enc.stdin.write(raw)) await once(enc.stdin, 'drain');
+    if (f % 300 === 0) console.log(`  frame ${f}/${nFrames}`);
+  }
+  enc.stdin.end(); await once(enc, 'close');
+}
+
+// audio: voice (placed by arithmetic) -> -16 LUFS, + sound effects + synthesized bed
+const inputs = [], graph = [];
+const add = file => { inputs.push('-i', file); return inputs.length / 2 - 1; };
+const vIdx = durs.map(r => add(path.join(DIR, 'voice', tag, path.basename(r.file))));
+scenes.forEach(sc => sc.text.forEach((_, k) => { const r = vIdx[sc.first + k]; graph.push(`[${r}:a]aresample=48000,aformat=channel_layouts=mono,adelay=${Math.round((sc.T + sc.at[k]) * 1000)}:all=1[v${r}]`); }));
+graph.push(vIdx.map(i => `[v${i}]`).join('') + `amix=inputs=${vIdx.length}:normalize=0:duration=longest,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,aformat=channel_layouts=stereo[voice]`);
+const fxIdx = FX.map(e => add(path.join(ROOT, `assets/sfx/${e.name}.wav`)));
+FX.forEach((e, j) => { const ms = Math.round(e.t * 1000); graph.push(`[${fxIdx[j]}:a]aresample=48000,aformat=channel_layouts=stereo,volume=${(0.32 * e.g).toFixed(3)},adelay=${ms}|${ms}[x${j}]`); });
+graph.push(FX.map((_, j) => `[x${j}]`).join('') + `amix=inputs=${FX.length}:normalize=0:duration=longest[fx]`);
+const BEDS = ['A_bright_pluck', 'D_swing_shuffle', 'E_bossa_nova'];
+const mArg = (rest.find((r, i) => rest[i - 1] === '--music') || '').toUpperCase();   // --music A|D|E, else rotate by lesson number
+const bed = BEDS.find(b => b[0] === mArg) || BEDS[((script.n || 1) - 1) % BEDS.length];
+console.log('music bed:', bed);
+const mIdx = add(path.join(ROOT, 'assets/music/' + bed + '.wav'));
+graph.push(`[${mIdx}:a]atrim=0:${total.toFixed(2)},asetpts=PTS-STARTPTS,volume=0.10,afade=t=in:d=3,afade=t=out:st=${(total - 4).toFixed(2)}:d=4[mus]`);
+graph.push(`[voice][fx][mus]amix=inputs=3:normalize=0:duration=longest,alimiter=limit=${script.limit ? script.limit + ":level=0" : 0.89},apad=whole_dur=${total.toFixed(2)}[a]`);
+const gfile = path.join(OUT, `${tag}_audio_graph.txt`); fs.writeFileSync(gfile, graph.join(';\n'));
+const wav = path.join(OUT, `${script.id}_${tag}_mix.wav`);
+execFileSync(FF, ['-v', 'error', '-y', ...inputs, '-filter_complex_script', gfile, '-map', '[a]', '-t', total.toFixed(2), '-ar', '48000', wav]);
+const final = path.join(OUT, `${script.id}_${tag}.mp4`);
+execFileSync(FF, ['-v', 'error', '-y', '-i', silent, '-i', wav, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', final]);
+const ts = s => { const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${x.toFixed(3).padStart(6, '0').replace('.', ',')}`; };
+fs.writeFileSync(path.join(OUT, `${script.id}_${tag}.srt`), CAPS.map((c, i) => `${i + 1}\n${ts(c.a)} --> ${ts(Math.min(c.b, CAPS[i + 1] ? Math.max(c.a + 0.2, CAPS[i + 1].a - 0.001) : c.b))}\n${c.text}\n`).join('\n'));
+fs.rmSync(silent); fs.rmSync(wav);
+console.log('done', final);

@@ -1,0 +1,50 @@
+{
+  "id": "L01_what_ai_is",
+  "n": 1,
+  "of": 40,
+  "title": "What AI actually is",
+  "arc": "AI LITERACY",
+  "scenes": [
+    { "visual": "hook", "kicker": "", "sentences": [
+      "You have almost certainly used artificial intelligence today.",
+      "A search suggestion. An autocorrected word. A recommended video.",
+      "But most people could not explain what it actually does.",
+      "In the next few minutes, you will be able to."
+    ]},
+    { "visual": "predict", "kicker": "01 · THE PREDICTION ENGINE", "sentences": [
+      "The chatbots and writing assistants you hear about are built on something called a large language model.",
+      "Its core job is easy to state. Given some text, predict the text that is most likely to come next.",
+      "Take the sentence: the capital of France is. The model assigns a probability to every possible next word.",
+      "Paris gets a very high one. Most other words get almost none.",
+      "It picks one, adds it to the text, and repeats. One word at a time, that is how a full answer gets written.",
+      "More precisely, it works in small pieces called tokens, which are often parts of words rather than whole words."
+    ]},
+    { "visual": "train", "kicker": "02 · HOW IT LEARNED", "sentences": [
+      "So how does it know which word is likely? It was trained on an enormous amount of written text.",
+      "In training, the model sees text with a word hidden, guesses it, and is corrected when it is wrong.",
+      "Repeated billions of times, this teaches it statistical patterns: grammar, common facts, styles of writing.",
+      "Notice what this is not. It is not a database that looks up a stored answer. It generates new text from learned patterns."
+    ]},
+    { "visual": "fluent", "kicker": "03 · FLUENT IS NOT TRUE", "sentences": [
+      "Here is the part most people get wrong.",
+      "A model built to produce likely text is also built to produce fluent text. And fluent is not the same as true.",
+      "Ask it for a source, and it can write a citation with a believable author, title, and journal that does not exist.",
+      "This is called a hallucination. The model is not lying. It has no intent. It is completing a pattern that looks right.",
+      "And its tone never changes. A wrong answer sounds exactly as confident as a right one."
+    ]},
+    { "visual": "goodbad", "kicker": "04 · STRENGTHS AND LIMITS", "sentences": [
+      "So where is it strong? Drafting, summarizing, rewriting, explaining, and organizing text that you give it.",
+      "Where is it weak on its own? Exact facts, recent events, arithmetic, and any detail where a small error matters."
+    ]},
+    { "visual": "rule", "kicker": "05 · THE WORKING RULE", "sentences": [
+      "That leads to one working rule. You stay the author.",
+      "Use it to get a first version, then check every name, number, date, and quote before it goes anywhere.",
+      "The more it matters if something is wrong, the more you verify."
+    ]},
+    { "visual": "recap", "kicker": "RECAP", "next": "How to ask, so the first draft is actually useful", "sentences": [
+      "To recap. A language model predicts likely text. It learned patterns, not a list of facts. And it sounds equally sure whether it is right or wrong.",
+      "Next lesson: how to ask, so the first draft you get back is actually useful.",
+      "Be the cog in the machine. Tools that work for you."
+    ]}
+  ]
+}
