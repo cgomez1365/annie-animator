@@ -9,7 +9,7 @@ Prerequisites: t5.1 (word times), t0.3 (render pipeline). Code: `module.mjs`. De
 
 ## When to use
 
-Every voiced video. The CEO's lessons have burned-in captions (`render.mjs drawCaption`: 52 px, y 1470, pill) and an `.srt`. This skill keeps that look and adds the word highlight, from word times that come from t5.1 (`buildTimeline(...).sentences[k].words`). One timing source feeds the pixels and the file, so they cannot disagree (measured: 2454 of 2454 sample times).
+Every voiced video. The training lessons have burned-in captions (`render.mjs drawCaption`: 52 px, y 1470, pill) and an `.srt`. This skill keeps that look and adds the word highlight, from word times that come from t5.1 (`buildTimeline(...).sentences[k].words`). One timing source feeds the pixels and the file, so they cannot disagree (measured: 2454 of 2454 sample times).
 
 ## The look (numbers from `STYLE`)
 

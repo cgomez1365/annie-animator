@@ -9,7 +9,7 @@ Prerequisites: t0.1 (easing), t0.2 (timeline). Code: `module.mjs` (own FFT, no d
 
 ## When to use
 
-Music under a card or lesson and a picture that should hit with it. For the CEO's lessons the music is only 10% under a voice, so the beat is a quiet cue: use it for pulses, ticks and scene changes that fall in the gaps between words, never to override a word cue (t5.1 wins when both want the same moment).
+Music under a card or lesson and a picture that should hit with it. For the training lessons the music is only 10% under a voice, so the beat is a quiet cue: use it for pulses, ticks and scene changes that fall in the gaps between words, never to override a word cue (t5.1 wins when both want the same moment).
 
 ## The three beds (known, no analysis needed)
 

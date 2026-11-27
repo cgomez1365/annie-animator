@@ -9,7 +9,7 @@ Prerequisites: t0.1 (easing and springs), t0.2 (seeded rng). Code: `module.mjs`.
 
 ## When to use
 
-The first beat of a tt10 card is a MESS (a restless spreadsheet buried in mail) that the studio's tool replaces. The mess must feel like real stuff: it shakes, it piles up, and when it goes it is kicked away. The CEO's level ("yes these are the levels of animation i need") comes from this. Use the skill for any object that arrives, rests or leaves. Moving UI parts (fields, buttons) is t1.5; things that loop forever is t1.4.
+The first beat of a tt10 card is a MESS (a restless spreadsheet buried in mail) that the studio's tool replaces. The mess must feel like real stuff: it shakes, it piles up, and when it goes it is kicked away. The tt10 quality level comes from this. Use the skill for any object that arrives, rests or leaves. Moving UI parts (fields, buttons) is t1.5; things that loop forever is t1.4.
 
 ## The rules (tt10_ops_hr numbers)
 

@@ -10,7 +10,7 @@ Code: `module.mjs` (recipes, drop, springLegs) on top of `engine/ease.mjs` and `
 
 ## When to use
 
-Every time something changes value over time: position, scale, alpha, rotation, colour. A linear move reads as mechanical and cheap. A curve with a clear start and a clear stop reads as physical. Rule of thumb from the tt10 cards (CEO: "yes these are the levels of animation i need"): things arrive fast and settle slow, leave slow and finish fast, and nothing important ever moves at one constant speed.
+Every time something changes value over time: position, scale, alpha, rotation, colour. A linear move reads as mechanical and cheap. A curve with a clear start and a clear stop reads as physical. Rule of thumb from the tt10 cards: things arrive fast and settle slow, leave slow and finish fast, and nothing important ever moves at one constant speed.
 
 ## The technique
 

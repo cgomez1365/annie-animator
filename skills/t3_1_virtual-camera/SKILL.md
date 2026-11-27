@@ -33,7 +33,7 @@ The camera is `{x, y, zoom, rot}`: x,y = px offset from rest, zoom = factor (1 =
 
 ## Blur and cost
 
-`withBlur(ctx, px, c => {...})`: draw the layer on `c` (same transform as ctx); it is blurred once. NEVER use `ctx.filter` around many draw calls: it costs about 35 ms per call on a full frame (46 dots took 1.6 s). A whip frame costs about 16 samples x 3 layers; the 8 s demo renders in about 1 minute at preview size on the shared iMac.
+`withBlur(ctx, px, c => {...})`: draw the layer on `c` (same transform as ctx); it is blurred once. NEVER use `ctx.filter` around many draw calls: it costs about 35 ms per call on a full frame (46 dots took 1.6 s). A whip frame costs about 16 samples x 3 layers; the 8 s demo renders in about 1 minute at preview size on the test machine.
 
 ## Common failures
 

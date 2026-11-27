@@ -30,12 +30,12 @@ engine/
 
 | Variable | Default | Use |
 |---|---|---|
-| `ANNIE_CANVAS` | `/Users/cris/Desktop/AEON-wt-deps/node_modules/@napi-rs/canvas/index.js` | the canvas library |
-| `ANNIE_FFMPEG` | `/Users/cris/Desktop/AEON-wt-deps/node_modules/ffmpeg-static/ffmpeg` | ffmpeg binary |
-| `ANNIE_LUCIDE` | `/Users/cris/Desktop/AEON-wt-deps/node_modules/lucide-react/dist/esm/icons` | lucide icon files for `icon()` |
+| `ANNIE_CANVAS` | (required) | path to `@napi-rs/canvas/index.js` |
+| `ANNIE_FFMPEG` | (required) | path to ffmpeg binary (e.g. from `ffmpeg-static`) |
+| `ANNIE_LUCIDE` | (required) | path to lucide icon ESM files for `icon()` |
 | `ANNIE_FONTS` | `engine/fonts` | font folder |
 | `ANNIE_PREVIEW=1` | off | render at 540x960 (same as `--preview`) |
-| `ANNIE_WORKERS` | 2 | parallel frame workers. The iMac is shared: never more than 2. |
+| `ANNIE_WORKERS` | 2 | parallel frame workers |
 
 ## The card contract
 
@@ -54,7 +54,7 @@ export function frame(t, i) {            // t = seconds, i = frame number. Retur
 Rules:
 - `frame` must be a pure function of `(t, i)`. No `Math.random`, no `Date`, no state kept between frames. Use `rng(seed)` created inside the frame (or at module level and re-created per frame if you consume it).
 - Create canvases only with `createCanvas` from the engine, not from `@napi-rs/canvas`. The checker reads the text through it.
-- `META` optional fields: `coverT` (cover frame second), `holds: [[t0,t1],...]` (seconds where stillness is allowed), `brand: 'aeon'` (needs the 18+ line, closer uses the AEON layout), `dither: false`, `qc: { closer: false, motionThreshold, frozenSeconds, contrast... }`.
+- `META` optional fields: `coverT` (cover frame second), `holds: [[t0,t1],...]` (seconds where stillness is allowed), `dither: false`, `qc: { closer: false, motionThreshold, frozenSeconds, contrast... }`.
 - Optional `export async function init()` runs once per worker (load images there).
 - The renderer applies `ditherDark` to every frame. Do not dither in the card.
 - Duration for demos: 5 to 8 s. The closer needs about 3 s at the end: closer at `T - 3.1` or earlier.
@@ -131,12 +131,12 @@ const { cv, ctx } = begin(t); setFont(ctx, 'sg', 104, 700); ctx.fillStyle = P.wh
 
 ## brand.mjs
 
-`P` palette (bg #0a0c10, panel #0d1117, panel2 #11161d, white #f8fafc, text #cbd5e1, muted #94a3b8, dim #475569, accent #00c97a, green #19e08f, cyan #22d3ee, red #ef4444, orange #f59e0b, ink #04140c). `SAFE` zones. `SLOGAN` (two lines, line 2 green), `CTA.follow`, `FOOTER.bgi` / `FOOTER.aeon`, `EIGHTEEN`, `KICKER`, `BANNED`, `claimViolations(s)`.
+`P` palette (bg #0a0c10, panel #0d1117, panel2 #11161d, white #f8fafc, text #cbd5e1, muted #94a3b8, dim #475569, accent #00c97a, green #19e08f, cyan #22d3ee, red #ef4444, orange #f59e0b, ink #04140c). `SAFE` zones. `SLOGAN` (two lines, line 2 green), `CTA.follow`, `FOOTER.bgi`, `KICKER`, `BANNED`, `claimViolations(s)`.
 
 ## parts.mjs
 
 `begin(t, {closerAt, kicker, dust})` -> `{cv, ctx}` (grid background, drifting dust, kicker). `end(ctx, t, {closerAt, brand, cta})`. `background`, `kicker`, `hook(ctx, cap, t)` (two-line mask-rise headline: `{tIn,tOut,l1,l2,c1,c2,b1,b2,px,glint}`; hook at px 104 baselines 470/580, page headers px 56 baselines 446/514), `windowFrame(ctx, {x,y,w,h,title,titleAlpha})` + `windowInner(w)`, `button(ctx, t, {x,y,w,h,label,doneLabel,pressT})`, `icon(ctx, 'lucide-name', x, y, size, colour, stroke)`, `dust(ctx, t, {...})`, `drawMark(ctx, cx, cy, size, {k, alpha})` (official BGI gear), `closer(ctx, t, t0, {brand})`, `CLOSER` y positions.
-The closer is complete by `t0 + 1.2` s and never freezes (dust, breathing Follow button). It contains the slogan, a Follow button, the footer, and for `brand: 'aeon'` the 18+ line.
+The closer is complete by `t0 + 1.2` s and never freezes (dust, breathing Follow button). It contains the slogan, a Follow button and the footer.
 
 ## render.mjs
 
@@ -145,7 +145,7 @@ node engine/render.mjs <card.mjs> [--preview] [--out dir] [--workers N] [--still
 ```
 Writes `<out>/<name>.mp4`, `<out>/<name>_contact.png` (12 frames), `<out>/<name>_report.json` and prints the report as JSON. Default out = `out/` next to the card. `--still 3.6` writes one PNG. `--range 1-2.5` renders only those seconds (`<name>_range.mp4`). `--preview` = 540x960, fast encode. Frames are PNGs in a scratch folder under `$TMPDIR`, removed afterwards (`--keep` leaves them). Colour pipeline: sRGB to BT.709 limited, tagged; libx264 crf 16 preset slow, high profile level 4.1 (preview: crf 20 veryfast). Report has `framesHash`: equal hash = identical frames.
 Library: `renderCard(path, opts)`, `renderFrame(card, i, {preview})`, `loadCard(path)`, `contactSheet(imgs, labels)`.
-Timing on the shared iMac (measured): hello_card, 225 frames, 2 workers: 9 s at 540x960, 17 s at 1080x1920. The checker takes about 5 s for the same card.
+Timing (measured): hello_card, 225 frames, 2 workers: 9 s at 540x960, 17 s at 1080x1920. The checker takes about 5 s for the same card.
 
 ## qc.mjs
 
@@ -164,7 +164,7 @@ Rules (HARD = fails the run, warn = reported):
 | Text under 42 px held more than 0.5 s (`decor` text exempt) | hard |
 | Contrast under 3:1 for more than 0.5 s (under 4.5:1 warns) | hard / warn |
 | Banned claim word (private, offline, secure, price, Gumroad, competitor names ...) at any moment | hard |
-| Closer in the second half: slogan pair with line 2 in #19e08f, Follow, footer; `brand: 'aeon'` needs 18+ | hard (off with `qc.closer:false`) |
+| Closer in the second half: slogan pair with line 2 in #19e08f, Follow, footer | hard (off with `qc.closer:false`) |
 | Text inside the Reels caption band y 1250-1580 | warn |
 
 Motion energy is the sum of the luma changes of at least 6 levels, per pixel, on a quarter-size frame. Measured: a 14 px dot moving 10 px per frame gives 0.018; the drifting grid background alone gives 0.000 (so background drift cannot hide a frozen subject; a grid-only card fails as frozen). Shorter-than-0.5 s zone or size breaks (text sliding in) are warnings.

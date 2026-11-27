@@ -7,7 +7,7 @@ description: Profiles a BGI card's render cost and memory: the time of each stag
 
 Prerequisites: t0.3 (render pipeline), t0.4 (quality checker). Code: `module.mjs` (+ `memproc.mjs`, a helper process). Real card: the ported tt10 and an optimised copy in `optimized/`.
 
-## The finding to remember (measured 2026-11-19, 1080x1920, shared iMac)
+## The finding to remember (measured 2026-11-19, 1080x1920, test machine)
 
 Per frame on tt10 and hello_card: card **draw (record) 2 ms + raster 9 ms**, engine **dither 17 ms**, engine **PNG encode 73 ms**: about 100 ms. Your card is about 11 percent of a frame. Skia only records drawing calls; the pixels are made at the first read (a 1x1 `getImageData` forces it), so timing `card.frame()` alone says 2 ms and is wrong. Optimising a card's drawing can gain a few percent; the engine's PNG encode and dither are where the time is (see `../t6_ENGINE_REQUESTS.md`). A raw-pipe prototype (`rawRender`) makes the same byte-identical mp4 in 5.9 s instead of 16.0 s.
 

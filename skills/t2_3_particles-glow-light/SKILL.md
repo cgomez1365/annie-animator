@@ -16,7 +16,7 @@ At the moment of an event (impact, press, completion, reveal) for 0.3-0.8 s, and
 1. Particles live 0.35-0.8 s (sparks) or 0.45-0.8 s (dust). Longer and it looks like snow. Fade with a power curve (alpha `(1-p)^1.4`) and shrink (size to 25 percent).
 2. Sparks are additive streaks along the velocity (length 0.045 s of travel, min 1.5 x size) with a small halo. Dust is normal-blend soft circles that GROW (1x to 2.6x) and fade. Do not mix them up.
 3. Colours: green `#19e08f`, white, cyan `#22d3ee` for sparks on dark. Dust is `#94a3b8`. Never use red or orange for success.
-4. Counts: spark burst 20-30, dust puff 8-12, motes 20-30. Test: 120 particles plus a full-frame bloom cost about 60 ms per frame (best of 6 on the shared iMac); a card with one burst and a half-size bloom is far cheaper.
+4. Counts: spark burst 20-30, dust puff 8-12, motes 20-30. Test: 120 particles plus a full-frame bloom cost about 60 ms per frame (best of 6 on the test machine); a card with one burst and a half-size bloom is far cheaper.
 5. Glow = additive (`lighter`) soft sprite. Never fake a glow with shadowBlur on many shapes (slow, and it clips).
 6. Bloom once per frame, after lights are drawn and BEFORE text. It keeps only light brighter than `threshold` (90 of 255), so panels, grid and dark areas never change. Without the threshold the whole region brightens and shows a visible rectangle (found and fixed in the demo).
 7. Every effect has a fixed seed. Same seed = same sparks every render. Use a different seed per event (`seed: 40 + n`) so repeats do not look copy-pasted.

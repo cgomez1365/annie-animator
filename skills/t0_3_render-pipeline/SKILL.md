@@ -21,16 +21,16 @@ export function frame(t, i) { /* return a 1080x1920 canvas; t = i / 30 */ }
 - `frame` is a pure function of `(t, i)`: same input, same pixels. No `Math.random`, no `Date`, no growing state.
 - Create canvases with `createCanvas` from the engine, not from `@napi-rs/canvas`.
 - Optional `init()` (async) for loading images; it runs once in every worker.
-- Optional META: `holds`, `brand: 'aeon'`, `dither: false`, `qc: {...}`.
+- Optional META: `holds`, `dither: false`, `qc: {...}`.
 
 ## Commands
 
 ```
 node engine/render.mjs card.mjs --preview --out /tmp/x     # 540x960, fast encode, about 9 s for 225 frames
-node engine/render.mjs card.mjs --out out                  # 1080x1920, about 17 s for 225 frames (measured on the shared iMac)
+node engine/render.mjs card.mjs --out out                  # 1080x1920, about 17 s for 225 frames (measured)
 node engine/render.mjs card.mjs --still 3.6 --out /tmp/x   # one PNG at t = 3.6 s, no encode
 node engine/render.mjs card.mjs --range 1-2.5 --out /tmp/x # only those seconds, file name_range.mp4
-node engine/render.mjs card.mjs --workers 1 ...            # fewer workers (default 2; never more than 2 on the shared iMac)
+node engine/render.mjs card.mjs --workers 1 ...            # fewer workers (default 2; default 2)
 ```
 Environment: `ANNIE_PREVIEW=1`, `ANNIE_WORKERS`, `ANNIE_CANVAS`, `ANNIE_FFMPEG`, `ANNIE_FONTS`, `ANNIE_LUCIDE`.
 Writes `out/<name>.mp4`, `out/<name>_contact.png` (12 frames), `out/<name>_report.json`; prints the report. Exit 0 if a silent MP4 of the right size came out.
@@ -38,7 +38,7 @@ Writes `out/<name>.mp4`, `out/<name>_contact.png` (12 frames), `out/<name>_repor
 ## What the renderer does (and why)
 
 1. Loads the card, checks META. 2. Splits frames round-robin over the workers: worker w draws w, w+W, w+2W... (`workerOf(i, workers)`). 3. Each worker calls `frame`, applies `ditherDark` (a static +-1 level pattern on near-black pixels so x264 does not show contour bands in the dark vignette), scales to 540x960 for preview, writes `0000.png`... into a scratch folder under `$TMPDIR`. 4. ffmpeg encodes: filter `scale=out_color_matrix=bt709:out_range=tv:flags=accurate_rnd+full_chroma_int+bitexact,format=yuv420p`; libx264 preset slow, crf 16, profile high level 4.1, `ref=4:bframes=3:aq-mode=3:deblock=-1,-1:deadzone-inter=6:deadzone-intra=6:psy-rd=0.6,0`; tags bt709 + iec61966-2-1 transfer; `+faststart`, `-an` (no audio). Preview: crf 20, preset veryfast. 5. Builds a 12-frame contact sheet, probes the file, writes the report with `framesHash` (sha1 of all frame PNGs). 6. Deletes the scratch frames (`--keep` leaves them).
-Same pipeline as the TikTok cards' `render-card.mjs`; only the hard-coded AEON paths are gone.
+Same pipeline as the TikTok cards' `render-card.mjs`.
 
 ## Planning and checking (`module.mjs`)
 
@@ -70,7 +70,7 @@ Same pipeline as the TikTok cards' `render-card.mjs`; only the hard-coded AEON p
 - Output is 1080x1920 (540x960 preview), 30 fps, H.264, no audio stream, duration = frames/30 within 0.05 s (test probes the file).
 - Same card, same frames: `frameHash` equal twice; `framesHash` equal with 1 worker and with 2 workers (test).
 - `--range` renders exactly the requested frames (test: 1-2 s = 31 frames).
-- A 7.5 s card renders in under 40 s at full size on the shared iMac with 2 workers (measured 17 s).
+- A 7.5 s card renders in under 40 s at full size with 2 workers (measured 17 s).
 
 ## Run it
 

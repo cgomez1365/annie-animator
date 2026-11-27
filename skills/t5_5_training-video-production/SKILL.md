@@ -5,33 +5,32 @@ description: Build long-form (2:30-3:30) vertical 9:16 training videos for TikTo
 
 # AI training video lessons
 
-Voice-driven explainer videos, one script in, a finished 1080x1920 MP4 + captions out. Built 2026-11-11 for the BGI "AI Training" course (40 lessons, mid-college level, serious, plain, not hyped). Lesson 1 ("What AI actually is") is the worked example in `examples/`: female (Heart) 2:58, male (Michael) 3:17. Voices chosen by the CEO: **Heart (`af_heart`) and Michael (`am_michael`)**. Nicole is NOT used: she speaks about 35% slower and turned lesson 1 into 4:20.
+Voice-driven explainer videos, one script in, a finished 1080x1920 MP4 + captions out. Built 2026-11-11 for the BGI "AI Training" course (40 lessons, mid-college level, serious, plain, not hyped). Lesson 1 ("What AI actually is") is the worked example in `examples/`: female (Heart) 2:58, male (Michael) 3:17. Recommended voices: **Heart (`af_heart`) and Michael (`am_michael`)**. Nicole is NOT used: she speaks about 35% slower and turned lesson 1 into 4:20.
 
 ## What one video is
 
 - 1080x1920, 30 fps, H.264 + AAC, about 10 MB, 2:30-3:30. Gates: 120-240 s, -18..-14 LUFS, true peak at or below -1 dBTP.
 - 5-7 scenes, 3-6 spoken sentences each (about 25 sentences, 440 words). Scenes join with 0.6 s dissolves. The first scene is the hook, the last is a recap, "next lesson" and the BGI end card (slogan, URL, Follow pill).
 - Voice: one Kokoro clip per sentence. Captions: burned in at y 1470 (inside TikTok's safe zone), 52 px, up to 2 lines, and exported as `.srt` from the same timings.
-- Sound: voice normalized to -16 LUFS; seven soft effects (whoosh at each scene change, pop, tick, chime, stamp, success, wrong) at about 32% of peak; a synthesized upbeat music bed at 10% (CEO 11-11: the slow ambient pad droned). Three beds, saved by the CEO and used interchangeably: **A bright pluck** (108 BPM), **D swing shuffle** (100 BPM), **E bossa nova** (118 BPM). `render.mjs` rotates them by lesson number (1=A, 2=D, 3=E, ...) or take `--music A|D|E`. Generator: `scripts/music.mjs` (other beds B, C, F, G, H exist in the working folder `samples/music_v2` and `music_v3`; the CEO did not pick them). No songs, no samples, nothing to license, nothing to label as AI music.
+- Sound: voice normalized to -16 LUFS; seven soft effects (whoosh at each scene change, pop, tick, chime, stamp, success, wrong) at about 32% of peak; a synthesized upbeat music bed at 10% (the slow ambient pad droned — use an upbeat bed). Three beds used interchangeably: **A bright pluck** (108 BPM), **D swing shuffle** (100 BPM), **E bossa nova** (118 BPM). `render.mjs` rotates them by lesson number (1=A, 2=D, 3=E, ...) or take `--music A|D|E`. Generator: `scripts/music.mjs` (other beds B, C, F, G, H exist in the working folder `samples/music_v2` and `music_v3`). No songs, no samples, nothing to license, nothing to label as AI music.
 
 ## Confirm before you build (ask only what blocks you)
 
 1. The lesson's topic and where it sits in the 40-lesson order. Read the previous lesson's `script.json` so "Next lesson:" is true.
 2. Voice: Heart and Michael unless told otherwise (the user wants both versions of each lesson; render both).
-3. Whether the lesson shows AEON. If it does: the 18+ line ("AEON is for adults: 18+, or the age of majority where you live.") must be on the end card and the claim rules below apply.
-4. Where it goes: a lesson folder `Lxx_<slug>/` holding `script.json`; output lands in `Lxx_<slug>/out/`.
+3. Where it goes: a lesson folder `Lxx_<slug>/` holding `script.json`; output lands in `Lxx_<slug>/out/`.
 
 ## The pipeline, in order
 
-Setup once: `scripts/setup.sh` (links or installs kokoro-js, generates the three music beds in `assets/music/`, prints the two env lines). Set `AIV_FFMPEG` and `AIV_CANVAS` (on this iMac `~/Desktop/AEON` was deleted 11-10; use a worktree install: `/Users/cris/Desktop/AEON-wt-deps/node_modules/ffmpeg-static/ffmpeg` and `/Users/cris/Desktop/AEON-wt-deps/node_modules/@napi-rs/canvas/index.js`; check they still exist). Work in the lesson's parent folder.
+Setup once: `scripts/setup.sh` (links or installs kokoro-js, generates the three music beds in `assets/music/`, prints the two env lines). Set `AIV_FFMPEG` and `AIV_CANVAS` to your local paths (ffmpeg-static binary and @napi-rs/canvas index.js). Work in the lesson's parent folder.
 
-1. **Script** — write `script.json` (see Script rules). `examples/L01_what_ai_is/script.md` is the readable form. Show the CEO the script before rendering anything: he reviews video by video.
+1. **Script** — write `script.json` (see Script rules). `examples/L01_what_ai_is/script.md` is the readable form. Show the script before rendering anything: review video by video.
 2. **Voice samples (new voice only)** — `node scripts/vo.mjs sample <script.json> af_heart am_michael` (sandbox OFF: kokoro's phonemizer WASM fails inside it).
 3. **Voice** — `node scripts/vo.mjs lesson <lessonDir> af_heart female` then `... am_michael male` (sandbox OFF, about 2 min each). One WAV per sentence, cached by hash; `durations.json` holds the lengths. Use ABSOLUTE `<lessonDir>` or leave it: render.mjs resolves by file name, so a relative path is fine.
 4. **Look check** — `node scripts/render.mjs <lessonDir> female --shots auto` writes one still per sentence to `out/shots/`. Tile them into a contact sheet and LOOK (`ffmpeg -pattern_type glob -i 'out/shots/female_*.png' -vf "select='lt(n,14)',scale=230:-1,tile=7x2" -frames:v 1 sheet.png`). This is where overlaps, clipped text and broken glyphs show up. Fix, re-shoot, only then render.
 5. **Render** — `node scripts/render.mjs <lessonDir> female` and `... male`. Frames are piped raw to ffmpeg (no PNG files), then the audio is mixed and muxed. Both lesson-1 videos finished in a few minutes each on this Mac. Run in the background. `--reuse` skips the frame pass if the silent video already exists (use it after an audio-only fix).
-6. **QC** — `scripts/qc.sh out/*.mp4`, then open a few frames from the FINISHED file, then listen. Say plainly that audio was measured, not heard, until the CEO has listened.
-7. **Deliver** — script.md, both MP4s and the `.srt` (send with SendUserFile). Put finished lessons in the CEO's reports folder for the day; copy to the drive kit only on his word.
+6. **QC** — `scripts/qc.sh out/*.mp4`, then open a few frames from the FINISHED file, then listen. Say plainly that audio was measured, not heard, until a person has listened.
+7. **Deliver** — script.md, both MP4s and the `.srt`.
 
 ## Timing rules, and why each number is what it is
 
@@ -55,8 +54,8 @@ All in `scripts/render.mjs` (top constants and the "timeline" block).
 
 - Level: mid-college, serious, plain. Define a term the first time it appears (token, hallucination) in one clause. No hype words ("game-changer", "revolutionary"), no "AI will..." predictions, no jargon walls. A sentence reads aloud in one breath.
 - Structure that holds view time: hook in the first 3 s (a fact the viewer recognizes) and a promise of what they will know; four to six scenes that each pay something off; one "here is the part most people get wrong" re-hook near the middle; one worked example; a rule they can use; a recap; "Next lesson: ..."; the slogan.
-- About 440 words gives 2:58 with Heart. Aim 350-450. Spoken text is exactly the sentence text, so write numbers and symbols the way they should be said ("forty percent", not "40%"; test any odd one with `vo.mjs sample`). `AEON` is spoken "Ee-on" (vo.mjs does it).
-- Claim discipline (BGI rules, enforced by eye): never "private", "offline", "secure", "just works", "forever", "no data leaves", any competitor or product name, any price. When a lesson mentions AEON, "Local only" is always named as a mode or a switch, never as a blanket promise. Illustrations must say so on screen ("illustrative numbers", "sample"). Facts that can date (a record height, a year) are checked before they go on screen (Everest 8,849 m).
+- About 440 words gives 2:58 with Heart. Aim 350-450. Spoken text is exactly the sentence text, so write numbers and symbols the way they should be said ("forty percent", not "40%"; test any odd one with `vo.mjs sample`).
+- Claim discipline (BGI rules, enforced by eye): never "private", "offline", "secure", "just works", "forever", "no data leaves", any competitor or product name, any price. Illustrations must say so on screen ("illustrative numbers", "sample"). Facts that can date (a record height, a year) are checked before they go on screen (Everest 8,849 m).
 - Slogan, both lines, always: "Be the cog in the machine. Tools that work for you."
 
 ## Scene library (in `render.mjs`, object `SCENE`)
@@ -96,7 +95,7 @@ BGI dark: bg `#0a0c10`, panels `#11161d`, cyan `#22d3ee`, green `#19e08f`, amber
 - **durations.json used to store relative voice paths** (a failed first mux). render.mjs now resolves by file name; if audio fails with "No such file", look there first.
 - **Loudness:** voice at -16 LUFS, bed at 10% of a -1 dBFS pad. Dropping `loudnorm` (as the 28 s cards once did) leaves the voice about 2 dB above the music: too quiet.
 - **Long runs:** render in the background; do not poll. Both lesson-1 renders ran back to back in one command.
-- **Posting is separate.** TikTok, YouTube Shorts and Instagram settings are in the AEON kit's post files (`/Volumes/AEON/Marketing Tools/06_Ads_and_Video/.../posts/`): AI-generated-content label on (the voice is AI), 18+ audience control on any video that shows AEON, commercial-content toggle "Your brand". No music label is needed: the bed is synthesized.
+- **Posting is separate.** Platform settings: AI-generated-content label on (the voice is AI), commercial-content toggle "Your brand". No music label is needed: the bed is synthesized.
 
 ## Worked example
 

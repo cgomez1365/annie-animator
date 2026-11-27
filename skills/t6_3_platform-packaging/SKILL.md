@@ -1,6 +1,6 @@
 ---
 name: platform-packaging
-description: Packages a finished BGI card for TikTok, Instagram Reels and YouTube Shorts: checks the video file against the specs, picks and checks the cover frame (with the 3:4 grid crop), and generates the post file with title (140 characters at most), caption, hashtags, AI labels, the 18+ audience control for AEON and the music-credit line, with every limit and claim rule checked. Use whenever a card is ready to post or schedule, when someone needs the caption, title, hashtags or cover for a video, or when a post file must be regenerated after a copy change, even if they only say "write the post for this one".
+description: Packages a finished BGI card for TikTok, Instagram Reels and YouTube Shorts: checks the video file against the specs, picks and checks the cover frame (with the 3:4 grid crop), and generates the post file with title (140 characters at most), caption, hashtags, AI labels and the music-credit line, with every limit and claim rule checked. Use whenever a card is ready to post or schedule, when someone needs the caption, title, hashtags or cover for a video, or when a post file must be regenerated after a copy change, even if they only say "write the post for this one".
 ---
 
 # Platform packaging (t6.3)
@@ -19,11 +19,10 @@ After the card passes the checker and the voice and music are on it. Packaging n
 | Caption | up to 2,200 characters; about 100 show before "more" | up to 2,200 | description up to 5,000 bytes |
 | Hashtags | 3-5 | 5 at most, caption and comments together | 3 at the end of the description (over 60 voids all); tags field up to 500 counted with quote marks and commas |
 | AI label | AI-generated content: On when voice, pictures or music are AI | Add AI label: On for a realistic AI voice | Altered or synthetic: No for a plain narrator; Yes if the AI voice is the product |
-| 18+ (AEON only) | Audience controls on the post: On | account-wide Minimum age 18 (no per-reel switch) | Age restriction: No (a restricted video cannot run as an ad); the 18+ line goes in the description |
 | Commercial | Disclose commercial content: On, Your brand (every post) | Paid partnership label: Off | Branded content: No |
 | Cover | pick a frame of the video; grid shows 3:4 | upload from camera roll, cannot be changed later; grid shows centre 3:4 | custom thumbnail needs the Partner Program |
 
-Every caption and description carries: the hook first, the body, the slogan pair together ("Be the cog in the machine." "Tools that work for you."), the link line, and for AEON `EIGHTEEN` ("AEON is for adults: 18+, or the age of majority where you live."). Shorts description adds "The voice is AI text-to-speech (Kokoro, Heart voice). The music is AI-generated (Google Gemini)." Reels audio is renamed "Ready For Tomorrow (AI music) · Broken Gear Industries". Banned words: the engine's list plus optimize, speed up, clean up. No `#` inside a link or word. TikTok has no tappable link: spell the site out ("Find it at ..."); Reels says "Link in bio:" only for the five bio links.
+Every caption and description carries: the hook first, the body, the slogan pair together ("Be the cog in the machine." "Tools that work for you."), and the link line. Shorts description adds "The voice is AI text-to-speech (Kokoro, Heart voice). The music is AI-generated (Google Gemini)." Reels audio is renamed "Ready For Tomorrow (AI music) · Broken Gear Industries". Banned words: the engine's list plus optimize, speed up, clean up. No `#` inside a link or word. TikTok has no tappable link: spell the site out ("Find it at ..."); Reels says "Link in bio:" only for the five bio links.
 
 ## Video file check
 
@@ -40,7 +39,7 @@ Every caption and description carries: the hook first, the body, the slogan pair
 
 ```js
 { id:'tt10_ops_hr', date:'2026-12-14', brand:'BGI', name:'Outgrew your spreadsheets?', hook:'...', body:'...', tags:[5 words], url:'brokengearindustries.com',
-  showsAeon:false, credit?:'map credit', title?:'TikTok title (default: the hook)', ytTail:'Broken Gear Industries', ytTags:['Broken Gear Industries','BGI'],
+  credit?:'map credit', title?:'TikTok title (default: the hook)', ytTail:'Broken Gear Industries', ytTags:['Broken Gear Industries','BGI'],
   ai:{ voice:true, music:true, voiceIsProduct?:false }, music:{ igAudioName:'Ready For Tomorrow (AI music) · Broken Gear Industries' } }
 ```
 - `buildCopy(spec)` -> `{tiktok:{title,caption}, shorts:{title,description,tags}, reels:{caption}}`.
@@ -53,7 +52,7 @@ Every caption and description carries: the hook first, the body, the slogan pair
 1. Render and QC the card (t0.3, t0.4); add voice and music (separate layer).
 2. Write the spec (copy from the card's script and the site; claims only from the card, its voice-over or the page it links to).
 3. `packageCard(...)`; fix every problem; open `<id>_cover_grid.png` and `<id>.md`.
-4. Paste from the md. For AEON: TikTok Audience controls (18+) On. Accept TikTok's Music Usage Confirmation when AI music is used.
+4. Paste from the md. Accept TikTok's Music Usage Confirmation when AI music is used.
 
 ## Common failures
 
@@ -68,7 +67,7 @@ Every caption and description carries: the hook first, the body, the slogan pair
 
 - The copy generator reproduces all 100 text blocks (TikTok caption, Shorts title, description, tags, Reels caption of the 20 existing posts) byte for byte.
 - A 141-character TikTok title, 7 hashtags, a banned word, a 101-character hook, a `#` in a link, AI music without its credit or Instagram audio name, and tags over 500 are each caught; 140 exactly passes.
-- AEON posts carry the 18+ line on all three platforms and TikTok Audience controls On; BGI-only posts neither.
+- Banned words are caught; AI labels enforced.
 - File check: a full-size silent master passes; preview size, sound on a master, and 24 fps fail.
 - Cover: the ported tt10 and the demo choose a headline frame before the closer; the closer scores 8+ lower; the cover is 1080x1920, the grid 1080x1440, bytes identical on a second run.
 

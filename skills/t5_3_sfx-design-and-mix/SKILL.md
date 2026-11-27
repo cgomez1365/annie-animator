@@ -9,7 +9,7 @@ Prerequisites: t5.1 (cue times for effects), t0.3 (render pipeline). Code: `modu
 
 ## When to use
 
-Any video with sound. Sources of truth: `ai-training-video/scripts/synth.mjs` (the effects, CEO-approved), `render.mjs` (the lesson mix) and `qc.sh` (the gates). This skill re-implements them in one tested module and adds ducking and plots. Audio cannot be looked at, so every claim here is a measurement (LUFS, dBTP, dB of reduction, onset times, envelope PNGs). It is NOT heard until a person listens.
+Any video with sound. Sources of truth: `ai-training-video/scripts/synth.mjs` (the effects), `render.mjs` (the lesson mix) and `qc.sh` (the gates). This skill re-implements them in one tested module and adds ducking and plots. Audio cannot be looked at, so every claim here is a measurement (LUFS, dBTP, dB of reduction, onset times, envelope PNGs). It is NOT heard until a person listens.
 
 ## The seven effects (all synthesized, deterministic, mono 48 kHz, peak -3 dBFS, 2 ms fade in, 5 ms fade out)
 
@@ -86,7 +86,7 @@ Outputs in `out/`: `demo.mp4` (silent), `demo_av.mp4`, `demo_mix.wav` + stems + 
 ## Not verified
 
 - Nobody listened. Levels, ducking taste and effect character are measured only.
-- The effects were re-implemented from `synth.mjs` with fades applied before normalization: tick's peak now reads -3.0 dBFS (it was -4.5 in the original, because its peak sits inside the fade). Not A/B compared by ear with the CEO-approved set.
+- The effects were re-implemented from `synth.mjs` with fades applied before normalization: tick's peak now reads -3.0 dBFS (it was -4.5 in the original, because its peak sits inside the fade). Not A/B compared by ear with the approved set.
 - One voice (Heart) and one bed (D, 16 s). A full 3-minute lesson mix was not rebuilt with this module (the lesson pipeline still uses render.mjs's own mix).
 - True peak is ffmpeg's ebur128 estimate (4x oversampling), not a second meter.
 

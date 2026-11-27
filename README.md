@@ -10,4 +10,4 @@ A gear body with ONE tooth missing (the broken-gear idea from the BGI mark), gen
 - `mascot/mascot_emotions_v3.mjs`: the card source. Every emotion is a parameter set (eye shape, lids, tilt, look, body and eye colour, spin, shake, bounce, scale, glow) blended over 0.4 s, plus small one-shot animations. Renders with the Annie engine (1080x1920, 30 fps, silent).
 - Stills: `emotions_sheet.png`, `new_emotions_sheet.png`, `proud_pair.png`.
 
-The engine and the 36-skill tree live in the Reports folder on the CEO's Mac, not in this repo.
+The engine and the skill tree are in this repo. See `SKILL_TREE.md` and `engine/README.md`.

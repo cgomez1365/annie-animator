@@ -17,7 +17,7 @@ Any card where the character talks and a voice file exists (or only its text). N
 1. **Decode**: `decodeAudio(file)` runs ffmpeg to mono 16 kHz float samples. Any format ffmpeg reads.
 2. **Envelope**: `loudness(samples, rate)` gives loudness every 10 ms (25 ms RMS window, in dB, 95th percentile = 1, 35 dB below = 0, 3-frame smoothing). Clean Kokoro silence reads exactly 0.
 3. **Segments and peaks**: `speechSegments` (voiced stretches, short gaps bridged) and `energyPeaks` (a vowel is a loudness peak, about one per syllable).
-4. **Syllables**: `syllabify(text)` splits words by vowel groups with fixes (silent e, `-ed`, `-es`, `-le`, `qu`), `PRONOUNCE` (AEON is "ee on", BGI "bee jee eye") and `SYLLABLE_OVERRIDES` (video, idea, being ...). Each syllable has a vowel class (AH EH EE OH OO), an onset shape (MBP, FV, SH, OO, TH, SS or none) and a lip-closing coda (m b p f v).
+4. **Syllables**: `syllabify(text)` splits words by vowel groups with fixes (silent e, `-ed`, `-es`, `-le`, `qu`), `PRONOUNCE` (BGI is "bee jee eye") and `SYLLABLE_OVERRIDES` (video, idea, being ...). Each syllable has a vowel class (AH EH EE OH OO), an onset shape (MBP, FV, SH, OO, TH, SS or none) and a lip-closing coda (m b p f v).
 5. **Align**: `alignSyllables(A, syls)`: dynamic programming matches speech segments to runs of syllables (energy share, preferring to end where the text has a full stop). Inside a segment: if the peak count equals the syllable count the peaks are used as they are, otherwise an energy CDF spreads the syllables and each snaps to the nearest unused peak within 70 ms.
 6. **Keys**: `visemeKeys`: onset shape 0.06 s before the vowel, vowel held around its centre (opening scaled by loudness), coda closure after. Lip closures (MBP) last at least 0.1 s (3 frames); other shapes at least 0.05 s.
 7. **Track**: `makeMouthTrack(A, text, {lead, blend, gain})` returns `{mouthAt(t), visemeAt(t), keys, aligned, segments}`. `mouthAt(t)` is a pure function that returns `{w, open, smile, round, tongue, teeth}`; assign it to `rig.mouth`.
@@ -59,7 +59,7 @@ Rules of thumb: always show MBP for at least 3 frames; do not show a shape short
 
 ## Text rules
 
-- Write the text exactly as it is spoken: numbers and symbols as words ("eighteen plus"), "AEON" is fine (spoken Ee-on), add a full stop where the voice pauses. The aligner uses punctuation to prefer segment boundaries, so a missing full stop at the end of a line costs accuracy.
+- Write the text exactly as it is spoken: numbers and symbols as words ("eighteen plus"), add a full stop where the voice pauses. The aligner uses punctuation to prefer segment boundaries, so a missing full stop at the end of a line costs accuracy.
 - Add odd words to `PRONOUNCE` (spelling as it sounds) and miscounted words to `SYLLABLE_OVERRIDES`. Hiatus words (video, radio, idea, area) must be in the override table.
 - Sentence-final pauses of 0.3 s or more split segments; the 0.15 s comma pause does not (the voice often does not stop for a comma).
 
@@ -89,7 +89,7 @@ All of the measurements above, plus: `mouthAt` pure and deterministic; `lead` sh
 ```
 cd skills/t4_4_lip-sync && node test.mjs      # about 1 to 2 minutes
 ```
-The test and demo read `.../TikTok_Demos/voiceover/tracks/*.wav` and `TikTok_VO_Scripts.md` (read-only). If that folder moves, change `VO` at the top of `test.mjs` and `demo.mjs`.
+The test and demo read voice-over WAV files from a path set in `VO` at the top of `test.mjs` and `demo.mjs`.
 
 ## What the demo shows (7.5 s)
 

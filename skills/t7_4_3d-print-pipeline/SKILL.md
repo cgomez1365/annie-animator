@@ -1,6 +1,6 @@
 ---
 name: 3d-print-pipeline
-description: Parametric 3D modeling (CadQuery / OpenSCAD) → STL export → slicing (Flash Studio / OrcaSlicer) → FDM printing on a Flashforge Adventurer 5M. Includes collision testing, build guides and print-ready STL sets.
+description: Parametric 3D modeling (CadQuery / OpenSCAD) → STL export → slicing (Flash Studio / OrcaSlicer) → FDM printing. Includes collision testing, build guides and print-ready STL sets.
 ---
 
 # 3D print pipeline (t7.4)
@@ -42,7 +42,7 @@ Tree supports for overhangs > 45°. Orient for strength (layer lines ⊥ to load
 
 ### 4. Printing
 
-Flashforge Adventurer 5M (Core XY, 220×220×220 mm). USB or LAN transfer. `ad5m_watcher.py` monitors print progress over TCP (port 8899), logs temperature and ETA.
+Any FDM printer with G-code or proprietary transfer (USB or LAN). A watcher script can monitor print progress, log temperature and ETA.
 
 ### 5. Deliverables
 
@@ -54,7 +54,7 @@ Per design: print-ready STLs in `print_ready/`, build guide (Markdown), specs an
 - Flash Studio or OrcaSlicer
 - Blender (optional, for freeform modeling)
 - Python 3.10+ (for watcher and CadQuery scripts)
-- Flashforge Adventurer 5M (or any FDM printer with G-code support)
+- An FDM printer with G-code or proprietary transfer support
 
 ## Quality bar
 

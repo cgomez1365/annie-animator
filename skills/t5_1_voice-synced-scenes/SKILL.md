@@ -9,7 +9,7 @@ Prerequisites: t0.2 (timeline and seeded rng), t0.3 (render pipeline). Code: `mo
 
 ## When to use
 
-Any card or lesson where the voice leads. The 28 s TikTok cards fitted a voice into fixed windows and failed (CEO: "terrible"). The rule now: **the voice sets the length, every picture fires on its word.** t5.4 (captions) and t5.3 (effects) both take their times from this skill.
+Any card or lesson where the voice leads. The 28 s TikTok cards fitted a voice into fixed windows and failed. The rule now: **the voice sets the length, every picture fires on its word.** t5.4 (captions) and t5.3 (effects) both take their times from this skill.
 
 ## What the pipeline gives you (read before you trust a number)
 

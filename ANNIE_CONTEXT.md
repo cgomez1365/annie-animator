@@ -10,7 +10,7 @@ Annie produces animated vertical video cards (1080×1920, 30fps, silent MP4) for
 
 ## The tt10 Standard
 
-Every card Annie produces meets the **tt10_ops_hr quality bar** (CEO, 2026-11-10: "yes these are the levels of animation i need"). The hallmarks:
+Every card Annie produces meets the **tt10 quality bar**. The hallmarks:
 
 ### 1. Window Frame
 - macOS-style window with traffic-light dots, title bar, border radius 22
@@ -45,8 +45,7 @@ Every card Annie produces meets the **tt10_ops_hr quality bar** (CEO, 2026-11-10
 - Window fades, headers fade
 - BGI slogan (both lines, always together), line 2 in green
 - "Follow for more AI literacy" CTA button with glow
-- Brand footer (aeon or bgi)
-- AEON cards: 18+ line
+- Brand footer (bgi)
 
 ## Palette (BGI)
 
@@ -80,8 +79,8 @@ Deterministic randomness via LCG: `s = (s * 1103515245 + 12345) & 0x7fffffff`. S
 
 ## Technical Stack
 
-- `@napi-rs/canvas` (Node.js, from AEON's node_modules)
-- `ffmpeg-static` (from AEON's node_modules)
+- `@napi-rs/canvas` (Node.js)
+- `ffmpeg-static`
 - PNG frames → libx264 crf 20, yuv420p, bt709
 - Voice: kokoro-js (Heart voice, speed 1, 24kHz)
 - Music: ffmpeg mix at 20% volume, from song's 2s mark, 3s fade
@@ -91,14 +90,13 @@ Deterministic randomness via LCG: `s = (s * 1103515245 + 12345) & 0x7fffffff`. S
 - Silent MP4 only — voice is a separate layer
 - Duration: `max(voiceDur + 12, 28)` seconds
 - Every card gets a lesson badge (dot progress + pill) and progress bar
-- AEON cards (arc YOUR SETUP, ai17–20): brand 'aeon', 18+ footer
-- Non-AEON cards: brand 'bgi', site URL footer
+- Brand 'bgi', site URL footer
 - The hook (question) always appears OUTSIDE the window first
 - The window is the teaching space — all instruction happens inside it
 - End with slogan + CTA + footer, never abruptly
 
 ## Skill tree
-45 skills across 9 tiers (t0–t8): read `SKILL_TREE.md`, then `engine/README.md`, then the skill folder you need (`skills/<id>_<slug>/SKILL.md`, runnable `demo.mjs` and `test.mjs`). Independent review in `REVIEW.md` (7.3/10 for original 36). Set `ANNIE_CANVAS`, `ANNIE_FFMPEG`, `ANNIE_LUCIDE` if the AEON-wt-deps folder is gone; use `ANNIE_PREVIEW=1` and at most 2 workers while iterating. Known gaps: no human has watched the demos; Cog mascot unapproved; t5.2 partial.
+45 skills across 9 tiers (t0–t8): read `SKILL_TREE.md`, then `engine/README.md`, then the skill folder you need (`skills/<id>_<slug>/SKILL.md`, runnable `demo.mjs` and `test.mjs`). Independent review in `REVIEW.md` (7.3/10 for original 36). Set `ANNIE_CANVAS`, `ANNIE_FFMPEG`, `ANNIE_LUCIDE` to your local paths; use `ANNIE_PREVIEW=1` and at most 2 workers while iterating. Known gaps: no human has watched the demos; Cog mascot unapproved; t5.2 partial.
 
-## Standing rule (CEO 2026-11-22)
-When you hand the CEO a file to review, put it in chat as a clickable markdown link (path relative to the working directory), one per file, next to the question. He runs many agents over a huge database; links are faster than paths.
+## Standing rule
+When you hand a file to review, put it in chat as a clickable markdown link (path relative to the working directory), one per file, next to the question.

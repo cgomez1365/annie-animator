@@ -1,6 +1,6 @@
 ---
 name: motion-brand-system
-description: Defines how Broken Gear Industries and AEON content moves, so every card feels like the same studio: the named timing-curve library, how the BGI cog turns (in clicks, never a smooth spin), do and do-not rules, and a scorer that grades a card file against the system and lists plain fixes. Use whenever a new card, template or video is being designed, whenever someone asks if a card is "on brand" or "feels like us", when choosing an easing or duration, when drawing or animating a gear or the mark, and before approving any card, even if they never mention motion rules.
+description: Defines how Broken Gear Industries content moves, so every card feels like the same studio: the named timing-curve library, how the BGI cog turns (in clicks, never a smooth spin), do and do-not rules, and a scorer that grades a card file against the system and lists plain fixes. Use whenever a new card, template or video is being designed, whenever someone asks if a card is "on brand" or "feels like us", when choosing an easing or duration, when drawing or animating a gear or the mark, and before approving any card, even if they never mention motion rules.
 ---
 
 # Motion brand system (t7.3)

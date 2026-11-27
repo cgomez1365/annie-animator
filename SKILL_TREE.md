@@ -22,7 +22,7 @@ Built 2026-11-19. Start with `engine/README.md`, then the skill you need (each f
 | t1.3 | [Physical object motion](skills/t1_3_physical-object-motion/SKILL.md) | verified | 8 | t0.1, t0.2 | Make objects jitter, pile up, scatter with seeded velocity and spin, land with a bounce and leave by physics instead of fading. |
 | t1.4 | [Persistent motion](skills/t1_4_persistent-motion/SKILL.md) | verified | 7 | t0.1, t0.2, t0.4 | Keep every hold alive with running markers, highlight sweeps, pulsing meters, blinking cursors, bouncing dots and marching dashes. |
 | t1.5 | [UI mockup kit](skills/t1_5_ui-mockup-kit/SKILL.md) | verified | 8 | t0.1, t1.1, t1.2 | Illustrated product screens: fields that fill, buttons that press, bubbles that pop, bars that grow, stamps that slam, toggles, tabs and ticks that draw. |
-| t1.6 | [The closer](skills/t1_6_the-closer/SKILL.md) | verified | 8 | t0.1, t1.1, t1.2 | Time the hand-over and draw the end card: hook out, window and headers fade, gear mark, slogan pair, a Follow button that presses once, the footer and the 18+ line on AEON cards. |
+| t1.6 | [The closer](skills/t1_6_the-closer/SKILL.md) | verified | 8 | t0.1, t1.1, t1.2 | Time the hand-over and draw the end card: hook out, window and headers fade, gear mark, slogan pair, a Follow button that presses once, and the footer. |
 
 ## Tier 2: Motion principles and effects
 
@@ -61,7 +61,7 @@ Built 2026-11-19. Start with `engine/README.md`, then the skill you need (each f
 | t5.2 | [Beat sync](skills/t5_2_beat-sync/SKILL.md) | partial | 6 | t0.1, t0.2 | Find a track's tempo and beats and use them to snap cuts and drive pulses, bounces and step lights. |
 | t5.3 | [SFX design and mix](skills/t5_3_sfx-design-and-mix/SKILL.md) | verified | 7 | t5.1, t0.3 | Seven soft synthesized effects and an ffmpeg mix (voice -16 LUFS, effects, ducked bed) with measured loudness, true peak and envelope plots. |
 | t5.4 | [Karaoke captions](skills/t5_4_karaoke-captions/SKILL.md) | verified | 7 | t5.1, t0.3 | Burn in captions at y 1470 with the current word wiped green as it is said, and write the .srt from the same timings. |
-| t5.5 | [Training video production](skills/t5_5_training-video-production/SKILL.md) | verified | — | t5.1, t0.3 | End-to-end training video pipeline: Kokoro TTS voice-over, pure-JS music beds, ffmpeg assembly, QC checks. Proven on FQC. |
+| t5.5 | [Training video production](skills/t5_5_training-video-production/SKILL.md) | verified | — | t5.1, t0.3 | End-to-end training video pipeline: Kokoro TTS voice-over, pure-JS music beds, ffmpeg assembly, QC checks. Proven in production. |
 | t5.6 | [Music generation (algorithmic)](skills/t5_6_music-generation-algorithmic/SKILL.md) | new | — | t0.2 | Algorithmic music via music theory: scales, chord progressions, rhythm patterns → MIDI → SoundFont rendering. 100% original, no AI weights. Python. |
 | t5.7 | [Music generation (AI model)](skills/t5_7_music-generation-ai/SKILL.md) | new | — | t0.2 | MusicGen-small (300M params), 12 style presets, GPU-accelerated. Prompt-driven original music generation. Python + PyTorch. |
 | t5.8 | [Audio synthesis (pure JS)](skills/t5_8_audio-synthesis-js/SKILL.md) | new | — | t0.2 | Zero-dependency music beds and SFX in Node.js: drum machines, pads, singing bowls, seeded RNG. Runs anywhere Node runs. |
@@ -84,8 +84,8 @@ Built 2026-11-19. Start with `engine/README.md`, then the skill you need (each f
 |---|---|---|---|---|---|
 | t7.1 | [Pseudo 3D and isometric](skills/t7_1_pseudo-3d-and-isometric/SKILL.md) | verified | 8 | t0.1, t0.2, t0.3, t0.4 | Make flat canvas cards feel three-dimensional: flipping cards, isometric blocks, shaded faces, cast shadows and parallax depth. |
 | t7.2 | [Mesh turntable](skills/t7_2_mesh-turntable/SKILL.md) | verified | 8 | t0.1, t0.3, t7.1 | Load an STL, thin it to a fast cached mesh, and render a smooth shaded turntable (with an optional printed-layer reveal) in plain JavaScript. |
-| t7.3 | [Motion brand system](skills/t7_3_motion-brand-system/SKILL.md) | verified | 7 | t0.1, t0.2, t0.4 | The BGI and AEON signature motion as code: a named timing-curve library, a cog that turns in clicks, do and do-not rules, and a scorer that grades a card file and lists fixes. |
-| t7.4 | [3D print pipeline](skills/t7_4_3d-print-pipeline/SKILL.md) | new | — | t7.2 | CadQuery/OpenSCAD parametric modeling → STL → Flash Studio/OrcaSlicer slicing → Flashforge Adventurer 5M. Holiday set and shelf tower as examples. |
+| t7.3 | [Motion brand system](skills/t7_3_motion-brand-system/SKILL.md) | verified | 7 | t0.1, t0.2, t0.4 | The BGI signature motion as code: a named timing-curve library, a cog that turns in clicks, do and do-not rules, and a scorer that grades a card file and lists fixes. |
+| t7.4 | [3D print pipeline](skills/t7_4_3d-print-pipeline/SKILL.md) | new | — | t7.2 | CadQuery/OpenSCAD parametric modeling → STL → Flash Studio/OrcaSlicer slicing → FDM printing. Holiday set and shelf tower as examples. |
 
 ## Tier 8: Creative AI
 
@@ -96,7 +96,7 @@ Built 2026-11-19. Start with `engine/README.md`, then the skill you need (each f
 
 ## Honest limits
 - (major) all: No human has played any demo video or listened to any audio; motion judged from stills and numbers only.
-- (major) t4.1: Cog mascot design has not been shown to or approved by the CEO.
+- (major) t4.1: Cog mascot design has not been approved.
 - (minor) t5.2: Partial: on bed E detected beat is half a beat off; BEDS constants must be used.
 - (minor) t4.4: Lip-sync never judged against real sound; syllable accuracy tuned in-sample.
 - (minor) all: Demos are 7.5-8 s with ~2.7 s closer, so the technique gets about 4.5 s; several features are unit-tested but not shown (t1.2 directions, t1.3 gravity, t1.5 signature, t2.4 text reveals, t3.3 vertical bars).

@@ -19,7 +19,7 @@ A format that repeats. One-off cards are hand-built (see tt10). A series is data
     "pages": [ { "type": "steps", "title": "series.json", "header": ["The template", "does the layout."],
                  "items": [ { "t": "Write the script" }, { "t": "Template draws it", "s": "optional sub line" } ] } ] } ] }
 ```
-- `brand`: `bgi` or `aeon` (aeon adds the 18+ line and the AEON footer through the engine closer).
+- `brand`: `bgi` (the brand footer through the engine closer).
 - `unit` + `n` + `total` make the pill: "PART 2 OF 5". `total` up to 12 draws one dot each; more than 12 draws a rail with a knob.
 - `hook`: two lines, at most 880 px wide at 104 px Space Grotesk 700 (about 14 characters). Shown outside the window.
 - `pages`: window pages, shown in order. `header` = two lines above the window (56 px). `title` = the window title bar.

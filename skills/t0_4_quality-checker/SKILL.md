@@ -30,7 +30,7 @@ Prints one line per issue (`FAIL` or `WARN`), a summary, writes `<out>/qc.json` 
 | Text size | under 42 px for more than 0.5 s (texture text via `decor(ctx)` exempt) | FAIL |
 | Contrast | under 3:1 for more than 0.5 s; under 4.5:1 warns | FAIL / WARN |
 | Banned claims | private, privacy, offline, secure, price patterns, forever, unlimited, no data..., Viz, Talent, competitor names, B Corp, Gumroad | FAIL at any moment |
-| Closer | in the 2nd half: slogan line 1 and 2 together with line 2 in #19e08f, Follow, brokengearindustries.com; AEON cards also the 18+ line | FAIL (switch off with `META.qc = {closer:false}`) |
+| Closer | in the 2nd half: slogan line 1 and 2 together with line 2 in #19e08f, Follow, brokengearindustries.com | FAIL (switch off with `META.qc = {closer:false}`) |
 | Reels caption band | text in y 1250-1580 | WARN |
 
 A zone or size break that lasts 0.5 s or less (text sliding in or out) is only a warning. A banned word is never excused.

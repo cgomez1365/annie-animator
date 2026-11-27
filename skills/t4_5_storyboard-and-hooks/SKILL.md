@@ -77,7 +77,7 @@ Each check has a weight; `score` is the weighted share passed (0-100). Failed id
 | cover | cover frame between 0.8 and 3.6 s, inside the hook beat | the cover must show the hook |
 | voice-fit | every voice line ends 0.05 s before its beat ends | the voice must not run into the next beat |
 | caption-band | no planned text in y 1250-1580 (`textY`) | Reels caption band |
-| claims | no banned claim or hype wording anywhere (text, voice, visual notes) | CEO claim rules |
+| claims | no banned claim or hype wording anywhere (text, voice, visual notes) | BGI claim rules |
 
 Failing a check is information, not an insult: fix the plan, then re-run. `noveltyCurve(compiled)` draws 1 at every event decaying over 1.2 s: it restates the event times (it is NOT a retention forecast), but a curve with long low stretches is the curve of a card that drags.
 

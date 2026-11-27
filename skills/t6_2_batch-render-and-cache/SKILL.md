@@ -30,7 +30,7 @@ After an edit, say which seconds it touched: `{ card, changed: [13.0, 16.5] }`. 
 2. keeps only previous frames outside the range whose PNG still matches the stored hash (`seeded`);
 3. **draws 8 reused frames again** (spread over the card, plus the two next to the range) and compares them with the cache. Any difference: the hint is rejected (`hint.accepted:false`) and every frame is drawn;
 4. draws only the frames inside the range.
-Measured (preview, 2 workers, shared iMac): tt10 first render 25.1 s; unchanged repeat 0.4 s; closer 0.2 s later = 105 of 495 frames drawn, 9.1 s. Same card, wrong hint: caught by the check, all frames redrawn, result still equals the engine's.
+Measured (preview, 2 workers, test machine): tt10 first render 25.1 s; unchanged repeat 0.4 s; closer 0.2 s later = 105 of 495 frames drawn, 9.1 s. Same card, wrong hint: caught by the check, all frames redrawn, result still equals the engine's.
 A hint is a promise about time, not about pixels: an edit to a shared helper that touches the whole card needs no hint (full redraw). Without a hint every changed fingerprint redraws everything, but `changedFrames` in the report still tells you which frames differ from the last version.
 
 ## Resume

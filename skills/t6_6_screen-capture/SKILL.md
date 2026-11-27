@@ -10,7 +10,7 @@ Prerequisites: t0.3 (render pipeline — for ffmpeg assembly patterns), t5.1 (vo
 ## When to use
 
 Any time you need a pixel-perfect recording of a web application:
-- Training videos (the FQC pipeline is built on this)
+- Training videos (a production pipeline is built on this)
 - Product demos and walkthroughs
 - Automated visual regression recordings
 - Scripted UI tours with narration
@@ -220,4 +220,4 @@ node demo.mjs                  # records a small demo of a local page
 
 ## Next skills
 
-This skill is consumed by t5.5 (training-video-production) for FQC training videos. It could also be used by t6.1 (series-templates) to record animated card previews, or by t6.3 (platform-packaging) to generate preview GIFs from rendered videos.
+This skill is consumed by t5.5 (training-video-production) for training videos. It could also be used by t6.1 (series-templates) to record animated card previews, or by t6.3 (platform-packaging) to generate preview GIFs from rendered videos.

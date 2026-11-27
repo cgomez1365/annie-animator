@@ -41,7 +41,7 @@ On the BGI grounds: `white`, `text`, `muted`, `faint`, `green`, `accent`, `cyan`
 1. `const r = await scoreCard('card.mjs', { srt: 'card.srt' }); console.log(lines(r).join('\n'))`.
 2. FIX lines first (they fail the card), then notes. Typical fixes: slow a pulse below 3 a second or lower its size; replace `dim` text with `muted` or `text`; keep a text up for 0.4 s + words / 3 s; cut caption lines at 42 characters (break at the end of a clause).
 3. Rerun until `pass`. Quote the score, the three headline numbers (flashes per second, lowest contrast, motion level) and what was not measured.
-4. Tell the CEO in one line, plain words: "Safe: no flashing, readable text, calm motion" or what has to change.
+4. Tell the reviewer in one line, plain words: "Safe: no flashing, readable text, calm motion" or what has to change.
 
 ## Common failures
 

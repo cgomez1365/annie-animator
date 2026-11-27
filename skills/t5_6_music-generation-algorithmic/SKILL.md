@@ -5,7 +5,7 @@ description: Generate original music beds from music theory rules — scales, ch
 
 # Music generation — algorithmic (t5.6)
 
-Prerequisites: t0.2 (timeline and seeded RNG — for deterministic composition). Source: AEON Neural Composer (`blocks/render_v2/music/composer.py`).
+Prerequisites: t0.2 (timeline and seeded RNG — for deterministic composition). Source: Neural Composer (`music/composer.py`).
 
 ## When to use
 
