@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 1900893,
+  "framesHash": "b427a26628d8032e8106922589451e1098e2b9cd",
+  "workers": 2,
+  "renderSeconds": 18.2,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t2_5_shape-morph-and-path-animation/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t2_5_shape-morph-and-path-animation/out/demo_contact.png"
+}

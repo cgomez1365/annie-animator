@@ -1,0 +1,35 @@
+{
+  "id": "t6.5",
+  "tier": 6,
+  "tierName": "Production",
+  "name": "Performance profiling",
+  "slug": "performance-profiling",
+  "summary": "Find where a frame's time and memory go (the card is about 11 percent, the engine's PNG encode about 73), cut the card's own cost with layer caches, and predict render time.",
+  "prerequisites": [
+    "t0.3",
+    "t0.4"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Per-stage frame times measured: tt10 draw 2 ms, raster 9, dither 17, PNG 73 (the card's own drawing is about 11 percent)",
+    "tt10's own time (11 ms mean, 16 ms p95) is inside the 25/40 ms budget and the advice says so",
+    "A planted slow card is described (3+ canvases, 100+ shadow calls, readback), its cached twin draws identical pixels in at most 70 percent of the time, a canvas leak is flagged and its clean twin is not",
+    "A cached-vignette tt10 matches the port to rounding and its own time is at least 12 percent lower",
+    "Predicted render time within about 35-45 percent of a real render; raw-pipe prototype mp4 is byte-identical to the engine's and faster; the engine's worker loop uses under half the memory when it yields"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "memproc.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "optimized/tt10_ops_hr_cached.mjs",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (34 checks passed, 0 failed, about 2 min). Measured on the shared iMac at 1080x1920: per frame draw 2 ms, raster 9, dither 17, PNG 73 (tt10 and hello_card); tt10 own time 11 ms mean / 16 ms p95 inside the 25/40 ms budget; hot spots by ablation: solid shapes 7.5 ms, gradient fills 4.1 ms; cached-vignette copy 10.9 -> 7.3 ms (33 percent), max 1 level per channel from the port, not byte-identical; planted slow card described and its cached twin pixel-identical in under 70 percent of the time; canvas leak flagged by WeakRef count; cost prediction 17.6 s vs 16.0 s real; raw-pipe prototype mp4 byte-identical to the engine's (sha1) in 5.9 s vs 16.0 s; the engine's worker loop peaks at 1.5 GB for 90 frames and 3.7 GB for 225 (0.5 GB when it yields). Demo rendered 1080x1920, 8.0 s, silent, checker passed (2 transient warnings). I viewed out/contact.png and judged it good. NOT checked: the numbers are from one shared machine under other load (repeat before quoting them as constants); ablation attributes cost by switching a feature off, which can change what else is drawn; the glow sprite was only measured for speed, its look was not compared with shadowBlur; rawRender was only proven on hello_card (byte-identical there), not on every card, and the engine itself was not changed; memory numbers are for this Node and @napi-rs/canvas version; nobody played the demo back."
+}

@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 1938475,
+  "framesHash": "10ec54541fce4d08ee1091bf38d3cec84a014563",
+  "workers": 2,
+  "renderSeconds": 17,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t6_4_accessibility-and-safety/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t6_4_accessibility-and-safety/out/demo_contact.png"
+}

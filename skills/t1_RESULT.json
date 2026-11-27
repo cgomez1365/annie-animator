@@ -1,0 +1,23 @@
+{
+  "tier": "Tier 1: The tt10 core",
+  "date": "2026-11-19",
+  "builtBy": "tier 1 builder agent",
+  "summary": "Six skills built in order, each with SKILL.md (67-84 lines), module.mjs, demo.mjs, test.mjs, skill.json and out/demo.mp4 + out/contact.png. All six node test.mjs runs exit 0 at full size 1080x1920 (final clean re-run): 301 unit checks in total, every demo 7.5-8 s silent, engine QC passes on the card and the mp4. I viewed each contact sheet (thumbnails) and fixed defects found there (hook touching the window in t1.3, a chip falling through the cog in t1.3, a stamp covering the toggle in t1.5). Not checked: nothing was played back by a person, only stills, pixel tests and motion-energy numbers; no audio.",
+  "skills": [
+    {"id": "t1.1", "slug": "window-frame", "status": "verified", "checks": 40},
+    {"id": "t1.2", "slug": "page-transitions", "status": "verified", "checks": 43},
+    {"id": "t1.3", "slug": "physical-object-motion", "status": "verified", "checks": 56},
+    {"id": "t1.4", "slug": "persistent-motion", "status": "verified", "checks": 45},
+    {"id": "t1.5", "slug": "ui-mockup-kit", "status": "verified", "checks": 60},
+    {"id": "t1.6", "slug": "the-closer", "status": "verified", "checks": 57}
+  ],
+  "knownLimits": [
+    "Demos are 7.5-8 s, so the t1.2 demo pages are 1.6-1.7 s (validatePlan warns; real cards use 3-4.7 s pages).",
+    "Demos import earlier tier-1 modules (t1.1, t1.2, t1.5) for composition; every module.mjs depends on the engine only.",
+    "The engine's own 42 px warning on the Follow label during its 0.1 s pop-in remains in every QC report (a warning, not a failure).",
+    "t1.5 stamp's elastic slam first reaches scale 1 after about 2 frames then wobbles; judged from numbers and stills, not playback.",
+    "Not exercised in a demo: t1.1 resize beyond one settle, t1.2 directions other than 'right', t1.3 scatterPose gravity and shake(), t1.4 lineRunner, t1.5 signaturePad and typed field values (all unit-tested).",
+    "BGI-variant closer is verified by pixel equality with the engine and unit tests; the t1.6 demo renders the AEON variant only."
+  ],
+  "engineRequests": "t1_ENGINE_REQUESTS.md (4 optional suggestions, none blocking)"
+}

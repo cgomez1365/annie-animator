@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 225,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 7.5,
+  "audioStream": false,
+  "bytes": 1859024,
+  "framesHash": "4825b08f7ad2d91d253d5a4d9c50e1626dd5e7a0",
+  "workers": 2,
+  "renderSeconds": 16.1,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t0_4_quality-checker/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t0_4_quality-checker/out/demo_contact.png"
+}

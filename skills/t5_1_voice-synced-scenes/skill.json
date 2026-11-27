@@ -1,0 +1,37 @@
+{
+  "id": "t5.1",
+  "tier": 5,
+  "tierName": "Sound and sync",
+  "name": "Voice-synced scenes",
+  "slug": "voice-synced-scenes",
+  "summary": "Turn each Kokoro sentence clip into word start times so pictures, highlights and effects land on the word being said.",
+  "prerequisites": [
+    "t0.2",
+    "t0.3"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Text-only first/last word within 0.06 s of the measured speech edges and 4x better than the old char-share spread (0.017 s vs 0.385 s on 10 Heart clips)",
+    "Text-only commas and full stops no farther from measured gaps than the baseline (0.058 s vs 0.082 s, 13 pauses)",
+    "With audio, every comma and full stop sits inside its measured gap; words ordered, no overlap",
+    "cue() throws for a word not in the sentence; sentence starts equal render.mjs arithmetic",
+    "Voice heard in demo_av.mp4 within 30 ms of the cue times (measured 0 ms)",
+    "Demo 1080x1920, 7.8 s, engine QC pass"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "fixtures/lesson.json",
+    "fixtures/s00.wav",
+    "out/demo.mp4",
+    "out/demo_av.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at 1080x1920 (45 checks passed, 0 failed; engine QC on the card and the mp4 passed with 3 warnings for text in motion). Measured against 10 real Kokoro Heart sentence clips (lesson 1). Viewed out/contact.png and judged it good. NOT checked: word times inside a clause (no ground truth: Kokoro's ONNX model returns only the waveform; no forced aligner); voices other than Heart; nobody listened to demo_av.mp4; the sync check in the muxed file uses the same data as the cues, so it proves the clock and mux, not the word model. Demo audio is voice only (no effects or music: see t5.3)."
+}

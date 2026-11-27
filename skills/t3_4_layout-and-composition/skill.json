@@ -1,0 +1,23 @@
+{
+  "id": "t3.4",
+  "tier": 3,
+  "tierName": "Camera, type and data",
+  "name": "Layout and composition",
+  "slug": "layout-and-composition",
+  "summary": "Place things on a vertical 9:16 card: grid, thirds, safe zones, type hierarchy, text that fits its box, and colours that stay legible.",
+  "prerequisites": ["t0.1", "t0.2", "t0.3", "t0.4"],
+  "status": "verified",
+  "qualityBar": [
+    "12-column grid spans exactly x 72 to 1008; tiles are equal, never overlap and fill their box",
+    "fitPx fits 12 real headlines in 776 px and at most 3 lines at 42 px or more, balances lines, and answers fits:false for copy that cannot fit",
+    "autoLayout keeps hierarchy (head over sub at least 1.25x), stays in its box, stays left of x 940 in the rail band, and its drawn ink sits inside the computed box",
+    "layoutIssues and composeCheck each catch the failure they claim (top, bottom, rail, 42 px, overlap, flat hierarchy, off-balance)",
+    "contrastRatio matches WCAG (white on black 21); ensureContrast lifts the dim grey to 4.5:1 and darkens on light grounds",
+    "Demo: engine QC passes on the card and on the mp4 (safe zones, 42 px floor, no frozen frames, closer present)"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size 1080x1920 (70 checks passed, 0 failed; demo 8 s, silent; engine QC on the card and on the mp4 passed). I viewed out/contact.png twice and judged the final one good (guides and tiles, re-fit between 104 px and a smaller headline, contrast rows with the auto-fix). Fixed during the run: outBack(0) returns 2e-16 not 0, so a scaled chip was drawn at 0 px and failed the 42 px rule (now guarded); contrast page rows enlarged; page 3 no longer overlaps page 2's exit. NOT checked: motion judged from stills and motion-energy numbers, never played back by a person; layouts with more than 4 blocks or with right-to-left text; autoLayout with a centre far from x 540 beyond one unit test; the 12-column grid is used in tests and the tile grid in the demo, but no card in this tier is built on the column spans yet."
+}

@@ -1,0 +1,28 @@
+{
+ "pass": true,
+ "checksPassed": 45,
+ "checksFailed": 0,
+ "failures": [],
+ "demoSeconds": 7.8,
+ "preview": false,
+ "framesHash": "343d298b2de65eeece6eff5230cd7596bdf17fdd",
+ "qcWarnings": 3,
+ "metrics": {
+  "leadSilence": [
+   0.28,
+   0.33
+  ],
+  "tailSilence": [
+   0.4249999999999998,
+   0.5099999999999998
+  ],
+  "edgeErrorChars": 0.3852499999999999,
+  "edgeErrorText": 0.016750000000000317,
+  "pauseErrorChars": 0.08155620103884458,
+  "pauseErrorText": 0.05782539097189146,
+  "pauseErrorAudio": 0,
+  "pausesScored": 13,
+  "syncFirstWordMs": 0,
+  "syncSecondSentenceMs": 0
+ }
+}

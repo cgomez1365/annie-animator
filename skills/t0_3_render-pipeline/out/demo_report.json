@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 225,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 7.5,
+  "audioStream": false,
+  "bytes": 1927349,
+  "framesHash": "5bb47b70944c1cf34a5eb6f5947525c46b44a889",
+  "workers": 2,
+  "renderSeconds": 15.9,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t0_3_render-pipeline/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t0_3_render-pipeline/out/demo_contact.png"
+}

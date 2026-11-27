@@ -1,0 +1,23 @@
+{
+  "id": "t3.2",
+  "tier": 3,
+  "tierName": "Camera, type and data",
+  "name": "Kinetic typography",
+  "slug": "kinetic-typography",
+  "summary": "Animate text per letter, word and line, highlight and emphasise key words, count numbers in fixed cells, decode text and run it along a curve, all inside the safe zones.",
+  "prerequisites": ["t0.1", "t0.2", "t0.3", "t0.4"],
+  "status": "verified",
+  "qualityBar": [
+    "Split letters reproduce the plain line (under 3 percent of ink differs); text on a straight path equals plain text (under 4 percent); kerning kept",
+    "Letter, word and line positions are exact (last letter ends within 1.5 px of the line end; line centred on x)",
+    "Every style is invisible at k=0 and exactly at rest at k=1; stagger orders cover every slot once; random order is seeded",
+    "countText lands exactly and never goes backwards; drawCounter width is constant while counting",
+    "scramble is deterministic and resolves left to right; safeCheck flags text above 250, below 1580, in the rail and under 42 px",
+    "Demo: engine QC passes on the card and on the mp4 (safe zones, 42 px floor, no frozen frames, closer present)"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size 1080x1920 (92 checks passed, 0 failed; demo 8 s, silent; engine QC on the card and on the mp4 passed with 32 warnings, all in-motion scale-pop frames under 0.1 s). I viewed out/contact.png and judged it good (per-letter drop and spin, marker sweep with pop, counter, decode, wave text all read clearly). Found and fixed during the run: centred text at 860 px reached the action rail (now fitted to 760 px). NOT checked: motion judged from stills and motion-energy numbers, never played back by a person; right-to-left and non-Latin text; emoji; text on a very tight curve (radius under 6 x font size); the page 2 headline is smaller (about 72 px) than page 1 because of the 760 px rail limit."
+}

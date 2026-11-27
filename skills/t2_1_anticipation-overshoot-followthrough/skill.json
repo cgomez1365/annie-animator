@@ -1,0 +1,34 @@
+{
+  "id": "t2.1",
+  "tier": 2,
+  "tierName": "Motion principles and effects",
+  "name": "Anticipation, overshoot, follow-through",
+  "slug": "anticipation-overshoot-followthrough",
+  "summary": "Give cards and UI a wind-up, a measured overshoot and a settle, with children that lag behind.",
+  "prerequisites": [
+    "t0.1",
+    "t0.2"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Anticipation 3-8 frames, overshoot 8-15 percent, settle 12-20 frames after release for every recipe (measured by test.mjs)",
+    "Measured overshoot within 0.6 points and pull-back within 0.3 points of the recipe; settle within 1.5 frames",
+    "Speed is continuous where the pull-back hands over to the spring; card ends exactly on target",
+    "Children lag more than 3 px while the parent moves and catch up at rest; tilt capped at 0.12 rad",
+    "Demo: flat vs alive card on the same three hops; QC passes, no frozen run over 0.5 s"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png",
+    "out/measured.json"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (61 checks passed, 0 failed; demo 8 s, 1080x1920, silent; engine QC on the card and the mp4 passed, 2 warnings). I viewed out/contact.png and judged it good (cards are small in the window; the difference reads but is subtle in stills). NOT checked: the motion was judged from stills, the contact sheet and numbers, not played back by a person; no audio; right-to-left and vertical travel only tested on a line, not in the demo."
+}

@@ -1,0 +1,23 @@
+{
+  "id": "t7.3",
+  "tier": 7,
+  "tierName": "Masterwork and 3D",
+  "name": "Motion brand system",
+  "slug": "motion-brand-system",
+  "summary": "The BGI and AEON signature motion as code: a named timing-curve library, a cog that turns in clicks, do and do-not rules, and a scorer that grades a card file and lists fixes.",
+  "prerequisites": ["t0.1", "t0.2", "t0.4"],
+  "status": "verified",
+  "qualityBar": [
+    "Every curve starts at 0 and ends within 2 percent of 1; enter/exit/glide/breathe never overshoot; pop 8-12, click 4-8, slam 30-45 percent overshoot",
+    "Ratchet sits on the exact tooth after each click, overshoot 4-8 percent of a tooth, snap speed over 3x average, zero velocity in the hold, 12 clicks = one turn",
+    "Meshed gear pair: centres rpA+rpB apart, counter-rotation by the tooth ratio, teeth overlap 3 px or less at 7 angles (a wrong phase overlaps over 100 px)",
+    "Static analyser finds easings, roles, timings, off-palette colours, Math.random and constant-speed rotation and ignores comments",
+    "Scorer: hello_card 100 (on brand), curves swapped 90, off-palette colours 85, Math.random capped at 59, a deliberately bad card 3 with fixes listed; all three t7 demos 90+",
+    "Demo 7.5 s 1080x1920 silent; engine QC passes on card and mp4"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (94 checks passed, 0 failed, including scoring 9 real or synthetic cards through the engine QC; demo rendered 1080x1920, 7.5 s, silent; engine QC passed on the card and the mp4 with 2 warnings: the Follow button text under 42 px for 0.10 s while it pops in, and the EXIT lane label touching the Reels caption band for 0.07 s while it slides in). I viewed out/contact.png and two full-size stills and judged them good; the scorer caught a real defect in my own first demo (a label in the action rail), which I fixed. NOT checked: motion judged from stills and numbers, not played back by a person; the scorer reads source text plus QC, so it is a rule-follower, not a taste judge, and it cannot see helper modules unless passed in files; the cadence range (0.3-4 events a second) is calibrated only on six cards, not on viewer data; the real tt10 card could not be scored because it imports a deleted AEON path; the 12-tooth cog proportions are my own drawing, not the official mark outline."
+}

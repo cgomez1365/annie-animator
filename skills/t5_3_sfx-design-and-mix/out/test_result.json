@@ -1,0 +1,91 @@
+{
+ "pass": true,
+ "checksPassed": 81,
+ "checksFailed": 0,
+ "failures": [],
+ "demoSeconds": 7.8,
+ "preview": false,
+ "framesHash": "d21525235ccbdd6355218e7104d68359c8be9c1e",
+ "qcWarnings": 1,
+ "metrics": {
+  "sfx": {
+   "whoosh": {
+    "dur": 0.8,
+    "peakDb": -3
+   },
+   "pop": {
+    "dur": 0.16,
+    "peakDb": -3
+   },
+   "tick": {
+    "dur": 0.08,
+    "peakDb": -3
+   },
+   "chime": {
+    "dur": 1.6,
+    "peakDb": -3
+   },
+   "stamp": {
+    "dur": 0.5,
+    "peakDb": -3
+   },
+   "success": {
+    "dur": 1.2,
+    "peakDb": -3
+   },
+   "wrong": {
+    "dur": 0.5,
+    "peakDb": -3
+   }
+  },
+  "mix": {
+   "lufs": -16,
+   "truePeak": -4.5,
+   "lra": 21.4,
+   "voiceStemLufs": -15.5,
+   "musicStemLufs": -37.4,
+   "fxPeakDb": -11.9,
+   "duckingDb": [
+    6.3,
+    5.2,
+    6.4
+   ],
+   "recoveryDb": 0,
+   "effectOnsetMs": [
+    {
+     "name": "whoosh",
+     "ms": 68
+    },
+    {
+     "name": "pop",
+     "ms": 1
+    },
+    {
+     "name": "tick",
+     "ms": 0
+    },
+    {
+     "name": "chime",
+     "ms": 1
+    },
+    {
+     "name": "stamp",
+     "ms": 1
+    },
+    {
+     "name": "success",
+     "ms": 1
+    },
+    {
+     "name": "wrong",
+     "ms": 1
+    }
+   ]
+  },
+  "avOffsetMs": 0,
+  "mp4": {
+   "lufs": -16,
+   "truePeak": -4.6
+  }
+ }
+}

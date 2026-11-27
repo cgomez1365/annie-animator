@@ -1,0 +1,35 @@
+{
+  "id": "t1.3",
+  "tier": 1,
+  "tierName": "The tt10 core",
+  "name": "Physical object motion",
+  "slug": "physical-object-motion",
+  "summary": "Make objects jitter, pile up, scatter with seeded velocity and spin, land with a bounce and leave by physics instead of fading.",
+  "prerequisites": [
+    "t0.1",
+    "t0.2"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Seeded scatter bodies are identical for the same seed and different for another; vx within +-450, vy -420..+280, spin within +-0.6 rad, biased upwards",
+    "Jitter peaks at exactly its amplitude and is deterministic; different offsets differ",
+    "An exiting piece travels over 150 px, accelerates (under 20 percent of the way at half time), alpha reaches 0 only with k = 1",
+    "Landing overshoots 5-15 percent, ends at scale 1 and lands exactly in place",
+    "bounce(): starts at y0, first touch at sqrt(2h/g), first hop height equals (e v)^2/2g to 0.5 px, never below the floor, continuous, rests on the floor with vy 0",
+    "Resting items keep bobbing within 6 px; exiting items move out, down and turn",
+    "Demo 8 s 1080x1920 silent: QC passes, no frozen run over 0.5 s"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size 1080x1920 (56 checks passed, 0 failed; demo 8 s, silent; engine QC on the card and on the mp4 passed with 1 warning(s), motion floor 0.009710679216149412). I viewed out/contact.png (12 frames, thumbnails) twice: the first version had the hook touching the window and a bounce chip falling through the cog, both fixed; the final sheet is good (sheet and pile, scatter at 2.17 s, drop, bouncing chips, closer). NOT checked: motion was judged from stills and numbers, not played back by a person; only the engine's Follow-label 42 px warning remains; gravity option of scatterPose and shake() were unit-tested but not used in the demo."
+}

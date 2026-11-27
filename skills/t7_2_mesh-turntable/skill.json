@@ -1,0 +1,24 @@
+{
+  "id": "t7.2",
+  "tier": 7,
+  "tierName": "Masterwork and 3D",
+  "name": "Mesh turntable",
+  "slug": "mesh-turntable",
+  "summary": "Load an STL, thin it to a fast cached mesh, and render a smooth shaded turntable (with an optional printed-layer reveal) in plain JavaScript.",
+  "prerequisites": ["t0.1", "t0.3", "t7.1"],
+  "status": "verified",
+  "qualityBar": [
+    "Binary STL roundtrip and ASCII parse work; garbage is rejected",
+    "Vertex-clustering decimation lands within 12 percent of the target, keeps vertices within one cell of the surface and 90-102 percent of the area; real 861,384-triangle dragon becomes 151,014 in 322 ms",
+    "Cache is exact, atomic, keyed by size+mtime+target; second load of the real model under 1.5 s (measured 21 ms)",
+    "Z-buffer: sphere centre depth = eye distance - radius within 0.3 mm; nearer sphere wins at every overlap pixel; culling by winding; silhouette area within 3 percent; antialiased edge",
+    "Clip plane removes everything above it and shows a green cap only when clipped; key light shades the lit side brighter; cavity darkening lowers mean brightness",
+    "One 1080x1920 frame of 150k triangles under 1.5 s (measured about 150 ms); identical pose gives identical pixels",
+    "Demo 7.5 s 1080x1920 silent; engine QC passes on card and mp4"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png", "cache/ (decimated dragon mesh, 2.7 MB, safe to delete)"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (44 checks passed, 0 failed, including the real dragon_final_v9.stl: 861,384 -> 151,014 triangles, frame about 150 ms; demo rendered 1080x1920, 7.5 s, silent; engine QC passed on the card and the mp4 with 1 warning, the Follow button text under 42 px for 0.10 s while it pops in). I viewed out/contact.png and two full-size stills (turn and print reveal) and judged them good. NOT checked: motion judged from stills and numbers, not played back by a person; only one model (the dragon) and one fallback (torus knot, rendered but not viewed) were tried; the axolotl STL was not rendered; Gouraud shading means very large flat triangles would show faceting; no UV textures; no audio. The 'printed' reveal is a visual metaphor (a cut plane climbing the mesh), not a slicer simulation."
+}

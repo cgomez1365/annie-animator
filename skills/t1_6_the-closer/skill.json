@@ -1,0 +1,35 @@
+{
+  "id": "t1.6",
+  "tier": 1,
+  "tierName": "The tt10 core",
+  "name": "The closer",
+  "slug": "the-closer",
+  "summary": "Time the hand-over and draw the end card: hook out, window and headers fade, gear mark, slogan pair, a Follow button that presses once, the footer and the 18+ line on AEON cards.",
+  "prerequisites": [
+    "t0.1",
+    "t1.1",
+    "t1.2"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "drawCloser matches the engine's closer() for bgi and aeon at six times from t0+0.2 to t0+2.8 (at most 40 differing pixels each)",
+    "Slogan: line 1 white and line 2 #19e08f by pixel colour counts in their rows, line 1 ends left of x 930, both lines always drawn together, text not a parameter",
+    "AEON closer writes both halves of the 18+ line, BGI none; footers are the brand URLs; nothing is drawn before t0",
+    "Follow button squeezes over 2.5 percent at the press (measured width), not with pressAt false, breathes, and the closer changes between frames 0.2 s apart",
+    "choreography/validateCloser numbers exact: leave t0-0.1..t0+0.3, press t0+1.9, end t0+3.1; plans with a short hold, a first-half closer, a missing META.brand or a late hook fail",
+    "Demo 8 s 1080x1920 silent (AEON variant): engine QC passes including slogan pair, Follow, footer and 18+ in the second half"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size 1080x1920 (57 checks passed, 0 failed; demo 8 s, silent; engine QC on the card and on the mp4 passed with 1 warning(s), motion floor 0.00851077942200649). I viewed out/contact.png (12 frames, thumbnails): hook out, window with a last page and a pressed button, hand-over, closer with mark, wordmark, slogan pair, Follow, footer and 18+ line. NOT checked: motion judged from stills, pixel tests and QC numbers, not played back by a person; the BGI (non-AEON) variant is verified by pixel equality with the engine and unit tests, but the demo renders only the AEON variant; the engine's own 42 px warning on the Follow label during its 0.1 s pop-in remains; AEON-specific wordmarks (product mark, FREE pill of the old end card) are not reproduced because the engine's closer does not have them."
+}

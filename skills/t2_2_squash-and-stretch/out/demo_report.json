@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 1791873,
+  "framesHash": "ef58c0bccf60df1c47d727f87ef9fe9753858216",
+  "workers": 2,
+  "renderSeconds": 23.2,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t2_2_squash-and-stretch/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t2_2_squash-and-stretch/out/demo_contact.png"
+}

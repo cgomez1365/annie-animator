@@ -1,0 +1,54 @@
+{
+ "tier": "3",
+ "tierName": "Camera, type and data",
+ "date": "2026-11-19",
+ "skills": [
+  {
+   "id": "t3.1",
+   "folder": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_1_virtual-camera",
+   "status": "verified",
+   "testExit0": true,
+   "checks": 70,
+   "fullSizeRun": true,
+   "qcWarnings": 12,
+   "demo": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_1_virtual-camera/out/demo.mp4",
+   "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_1_virtual-camera/out/contact.png"
+  },
+  {
+   "id": "t3.2",
+   "folder": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_2_kinetic-typography",
+   "status": "verified",
+   "testExit0": true,
+   "checks": 92,
+   "fullSizeRun": true,
+   "qcWarnings": 32,
+   "demo": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_2_kinetic-typography/out/demo.mp4",
+   "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_2_kinetic-typography/out/contact.png"
+  },
+  {
+   "id": "t3.3",
+   "folder": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_3_data-motion",
+   "status": "verified",
+   "testExit0": true,
+   "checks": 57,
+   "fullSizeRun": true,
+   "qcWarnings": 12,
+   "demo": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_3_data-motion/out/demo.mp4",
+   "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_3_data-motion/out/contact.png"
+  },
+  {
+   "id": "t3.4",
+   "folder": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_4_layout-and-composition",
+   "status": "verified",
+   "testExit0": true,
+   "checks": 70,
+   "fullSizeRun": true,
+   "qcWarnings": 30,
+   "demo": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_4_layout-and-composition/out/demo.mp4",
+   "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_4_layout-and-composition/out/contact.png"
+  }
+ ],
+ "notBuilt": [],
+ "notChecked": "Motion judged from contact sheets, a few stills and motion-energy numbers; no human played the videos. No audio. Skills tested only on their own demos.",
+ "engineRequests": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_ENGINE_REQUESTS.md"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "t4.5",
+  "tier": 4,
+  "tierName": "Character and story",
+  "name": "Storyboard and hooks",
+  "slug": "storyboard-and-hooks",
+  "summary": "Plan a 28 s or 16 s card before drawing it: beat sheets, 14 tested hook patterns, a pacing checklist and a storyboard.json that compiles into a timeline.",
+  "prerequisites": ["t4.4", "t0.2", "t0.3"],
+  "status": "verified",
+  "qualityBar": [
+    "Both beat templates add up to T minus the 3.1 s closer, hook first and payoff last",
+    "14 hook patterns whose examples fit at 88 px or more with no banned claim and no hype word; banned, hype, price, over-long and empty hooks are caught",
+    "Voice-time model within 0.25 s mean and 1.0 s worst over 95 measured Kokoro script rows (in-sample fit; 0.17 s held-out)",
+    "Both example storyboards compile deterministically and pass all 14 pacing checks",
+    "17 deliberately broken storyboards each fail the check that names their fault",
+    "makeCard returns a working 1080x1920 frame function; demo 7.5 s, silent, QC pass, every number on screen from the compiler"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png", "out/example_storyboard_28.json", "out/example_storyboard_16.json", "out/example_voice_table_28.md"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (121 checks passed, 0 failed; demo 1080x1920, 7.5 s, silent; engine QC passed). The pacing checker caught a real fault in my own first example (a proof-beat voice line 0.11 s too long) which I then fixed. I viewed a 12-frame sheet of the demo (beat sheet page, timeline with playhead and novelty curve, four ticked checks, closer) and judged it good. NOT checked: whether these rules actually raise viewer retention (the thresholds are habits taken from the tt10 standard and common short-video practice, not measured on BGI's own audience data); the hook patterns were not tested with viewers; the voice-time model is fitted to Kokoro Heart only; no audio; the novelty curve is the plan restated, not a forecast."
+}

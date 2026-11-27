@@ -1,0 +1,36 @@
+{
+  "id": "t6.2",
+  "tier": 6,
+  "tierName": "Production",
+  "name": "Batch render and cache",
+  "slug": "batch-render-and-cache",
+  "summary": "Render many cards with 2 parallel workers and a content-hashed frame cache, redraw only what changed, resume interrupted runs, and prove the frames are identical.",
+  "prerequisites": [
+    "t0.2",
+    "t0.3",
+    "t0.4"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Batch framesHash equals the engine's renderCard framesHash for the same card",
+    "A repeat run does nothing (status unchanged, 0 frames drawn, under 3 s); a deleted mp4 is re-encoded from cached frames",
+    "A small edit with a changed-seconds hint redraws only those frames (tt10 closer edit: 105 of 495) and the result equals a full engine render; a wrong hint is rejected by an 8-frame check",
+    "After a simulated crash and a truncated frame the rerun resumes, repairs the bad frame and gives the same framesHash as an uninterrupted render",
+    "determinismReport passes for clean cards and the ported tt10 and fails, naming frames, for a card using Math.random"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "detproc.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "ported/tt10_ops_hr.mjs",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (44 checks passed, 0 failed, about 2 min). Batch framesHash equals the engine's for the same card; repeat run 0.3 s; incremental edit redraws 21 of 60 frames (small card) and 105 of 495 (ported tt10, 11 s vs 24 s first render, preview) and equals a full engine render; wrong hint rejected; crash + truncated frame resumed with the same hash; determinismReport true for clean cards and ported tt10, false for Math.random. Demo rendered 1080x1920, 8.0 s, silent, checker passed (16 transient warnings from pop-in scaling). I viewed out/contact.png and judged it good. NOT checked: the equality of tt10's incremental result with a full engine render (only the 60-frame card is proven that way; tt10 is checked by the 8-frame sample plus the frame counts); full-size (1080x1920) batch runs of many cards (batch tests use 540x960 previews); mp4 byte identity with the engine's mp4 (frames are identical, encoder threads differ); never run with more than 2 workers; motion judged from stills, not played back."
+}

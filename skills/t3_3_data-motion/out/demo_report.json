@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 1999037,
+  "framesHash": "a201a0d6e148370384793ca5ee60eb6473d46e9e",
+  "workers": 2,
+  "renderSeconds": 33.5,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_3_data-motion/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_3_data-motion/out/demo_contact.png"
+}

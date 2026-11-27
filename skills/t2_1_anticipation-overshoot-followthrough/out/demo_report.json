@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 2059787,
+  "framesHash": "7171955366cd7c38806853c77a262ca430479598",
+  "workers": 2,
+  "renderSeconds": 23.8,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t2_1_anticipation-overshoot-followthrough/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t2_1_anticipation-overshoot-followthrough/out/demo_contact.png"
+}

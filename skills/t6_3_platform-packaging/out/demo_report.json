@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 1804678,
+  "framesHash": "76da6dd7e0e8a56f5e576481e60447cd28faeb86",
+  "workers": 2,
+  "renderSeconds": 20.7,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t6_3_platform-packaging/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t6_3_platform-packaging/out/demo_contact.png"
+}

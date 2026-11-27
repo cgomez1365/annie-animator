@@ -1,0 +1,37 @@
+{
+  "id": "t6.1",
+  "tier": 6,
+  "tierName": "Production",
+  "name": "Series templates",
+  "slug": "series-templates",
+  "summary": "One JSON script becomes a whole series of cards with the same badge, progress bar, hook, window and closer.",
+  "prerequisites": [
+    "t0.1",
+    "t0.2",
+    "t0.3",
+    "t0.4"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "validateSeries catches a banned claim word, text too wide at 42 px, an unknown page type, 5 items, a missing icon, a missing title, a too-wide hook, a bad brand and a 3-line compare line",
+    "All 5 episodes of the sample series pass the engine quality checker with no hard failure",
+    "Across episodes the lesson pill is centred and at the same height, the dots differ by episode number, and the window title bar is pixel-identical at the same time",
+    "frame(t) is pure: the same frame twice and out of order hash the same",
+    "The 7.5 s demo has no motion gap over 0.5 s, keeps text clear of the safe zones, and ends with the engine closer"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "series.json",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png",
+    "out/series_sheet.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (38 checks passed, 0 failed; 5 sample episodes each passed the engine checker; demo rendered 1080x1920, 7.5 s, silent; checker on card and mp4 passed with 1 transient warning). I viewed out/contact.png and out/series_sheet.png and judged them good. NOT checked: motion judged from stills, not played back by a person; the series was only built with 4 page types and 5 episodes (the 12+ episode rail variant is only checked for green pixels in one frame, not looked at); not run against a ported real card (that is covered by t6.2, t6.4 and t6.5)."
+}

@@ -1,0 +1,23 @@
+{
+  "id": "t3.3",
+  "tier": 3,
+  "tierName": "Camera, type and data",
+  "name": "Data motion",
+  "slug": "data-motion",
+  "summary": "Animate bar, line and donut charts, sparklines, counters, delta badges and a before/after comparison so numbers read at phone size.",
+  "prerequisites": ["t0.1", "t0.2", "t0.3", "t0.4"],
+  "status": "verified",
+  "qualityBar": [
+    "fmt never adds a currency sign; easeNumber lands exactly, is monotonic and never overshoots",
+    "Bar lengths are exactly proportional to values; outBack tip overshoot stays between 2 and 15 percent; growth lands at exactly 1",
+    "Line chart head lands on the last value and stays inside the plot; monotone curve passes through every point and never leaves the data range",
+    "Donut slices plus gaps close the circle, fill in order, shares sum to 1, colours land at their angles",
+    "readability() flags too many items, labels wider than 40 percent, text under 42 px and more than 3 series",
+    "Demo: engine QC passes on the card and on the mp4 (safe zones, 42 px floor, no frozen frames, closer present)"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size 1080x1920 (57 checks passed, 0 failed; demo 8 s, silent; engine QC on the card and on the mp4 passed). I viewed out/contact.png and, separately, a still of vertical bars + scan bars + a down badge, and judged them good. Fixed during the run: the '0%' centre number showed over the previous page before the donut started (now hidden until the sweep begins). NOT checked: motion judged from stills and motion-energy numbers, never played back by a person; vertical bars, the scan highlight and the down badge are covered by unit checks and one still but are not in the demo video; charts with negative values (the baseline is fixed at 0 for bars; line charts accept min); more than 3 series; very long label strings beyond what readability() measures."
+}

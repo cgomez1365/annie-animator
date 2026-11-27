@@ -1,0 +1,36 @@
+{
+ "voice": "af_heart (Kokoro, speed 1)",
+ "source": "AI_Training_Long L01 sentences 0-9, resampled to 16 kHz mono (sentences 3,5,7,8,9)",
+ "rows": [
+  {
+   "i": 3,
+   "text": "In the next few minutes, you will be able to.",
+   "dur": 2.9,
+   "file": "fixtures/s03.wav"
+  },
+  {
+   "i": 5,
+   "text": "Its core job is easy to state. Given some text, predict the text that is most likely to come next.",
+   "dur": 6.875,
+   "file": "fixtures/s05.wav"
+  },
+  {
+   "i": 7,
+   "text": "Paris gets a very high one. Most other words get almost none.",
+   "dur": 4.375,
+   "file": "fixtures/s07.wav"
+  },
+  {
+   "i": 8,
+   "text": "It picks one, adds it to the text, and repeats. One word at a time, that is how a full answer gets written.",
+   "dur": 7.075,
+   "file": "fixtures/s08.wav"
+  },
+  {
+   "i": 9,
+   "text": "More precisely, it works in small pieces called tokens, which are often parts of words rather than whole words.",
+   "dur": 7.275,
+   "file": "fixtures/s09.wav"
+  }
+ ]
+}

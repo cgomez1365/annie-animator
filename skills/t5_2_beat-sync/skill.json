@@ -1,0 +1,37 @@
+{
+  "id": "t5.2",
+  "tier": 5,
+  "tierName": "Sound and sync",
+  "name": "Beat sync",
+  "slug": "beat-sync",
+  "summary": "Find a track's tempo and beats and use them to snap cuts and drive pulses, bounces and step lights.",
+  "prerequisites": [
+    "t0.1",
+    "t0.2"
+  ],
+  "status": "partial",
+  "qualityBar": [
+    "Click tracks 120/90/140 BPM: tempo within 0.3 BPM, phase within 15 ms, onsets within 20 ms",
+    "Beds A, D, E at three start offsets: tempo within 0.3 BPM on all nine; A and D phase within 25 ms (measured 1-3 ms); 90%/70% of true beats have an onset within 40 ms",
+    "beatPulse is 1 on the beat, decays, rises into the next, no jumps; snapCuts keeps order and gap and leaves far cuts alone",
+    "demo_av.mp4: audio reads 107.9 BPM and the three snapped cuts are within 2 ms of a beat found in that file and on a kick onset",
+    "Demo 1080x1920, 7.8 s, engine QC pass"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "fixtures/A_bright_pluck.wav",
+    "fixtures/D_swing_shuffle.wav",
+    "fixtures/E_bossa_nova.wav",
+    "out/demo.mp4",
+    "out/demo_av.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at 1080x1920 (85 checks passed, 0 failed; engine QC on card and mp4 passed with 1 warning). Tempo, phase and onsets measured on synthetic click tracks and on the three beds at three start offsets; cut-vs-beat measured on the audio decoded from out/demo_av.mp4. Viewed out/contact.png and a full-size still and judged them good. PARTIAL because: on bed E the detected beat is exactly half a beat off (about 253 ms; tempo right) - use BEDS constants and phase 0 for E; other recorded music was not tested; nobody listened to demo_av.mp4; swingTime only unit-tested against arithmetic."
+}

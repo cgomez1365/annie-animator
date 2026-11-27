@@ -1,0 +1,31 @@
+{
+  "id": "t0.4",
+  "tier": 0,
+  "tierName": "Foundation",
+  "name": "Quality checker",
+  "slug": "quality-checker",
+  "summary": "Check every card for frozen frames, unsafe text, small text, low contrast and banned claims before posting.",
+  "prerequisites": [
+    "t0.3"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "The checker flags a frozen segment, text above y 250, text in the action rail, text under 42 px, a banned word and low contrast, each by its own rule (engine self-test)",
+    "It passes a clean card and a declared hold",
+    "lint() gives a plain fix for every issue; checkBox() nudges text into the safe area",
+    "Demo passes QC with 1 warning (Follow button pop-in scale, 0.1 s)"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (18 unit checks passed, 0 failed; demo rendered 1080x1920, 7.5 s, silent; engine QC on the card and on the mp4 passed with 1 warning). Engine self-tests (197 checks) passed. I viewed out/contact.png and judged it good. NOT checked: the motion was judged from stills, the contact sheet and motion-energy numbers, not played back by a person; no audio; the demo's text was only checked by the engine rules, not read aloud."
+}

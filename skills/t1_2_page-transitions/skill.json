@@ -1,0 +1,36 @@
+{
+  "id": "t1.2",
+  "tier": 1,
+  "tierName": "The tt10 core",
+  "name": "Page transitions",
+  "slug": "page-transitions",
+  "summary": "Slide pages in and out of the window the tt10 way, with one header per page outside the window and a window title that changes only after the old page has gone.",
+  "prerequisites": [
+    "t0.1",
+    "t0.2",
+    "t1.1"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "pagePlan([3.1,4.75,3.7],{t0:1.9}) reproduces tt10_ops_hr's pages exactly (1.9-5.0, 4.9-9.65, 9.55-13.25)",
+    "Slide in is 0.4 s outCubic from 160 px, slide out 0.35 s inCubic to -160 px, alpha 0 at both ends (exact endpoints, mid-points checked against the curves)",
+    "Overlap is 0.1 s: both pages are visible in it, the next is absent before it",
+    "Header comes in 0.05 s after its page, leaves 0.3 s before it, 56 px, baselines 446/514; one header is gone before the next starts",
+    "Window title changes only after the previous page ends",
+    "validatePlan flags a wrong overlap, a title that changes early, a page that outlives the window, a too-short page",
+    "Demo 8 s 1080x1920 silent: engine QC passes, no frozen run, closer correct"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size 1080x1920 (43 checks passed, 0 failed; demo 8 s, silent; engine QC on the card and on the mp4 passed with 5 warning(s), motion floor 0.009710679216149412). I viewed out/contact.png (12 frames, thumbnails) and judged it good: three pages with their own headers, list, bars and tiles, the window title following each page. NOT checked: motion was judged from stills and numbers, not played back by a person; the demo's pages are 1.6-1.7 s (compressed to fit 8 s), shorter than tt10's 3-4.7 s, so validatePlan warns on them; dir 'up' and 'left' were unit-tested but not rendered."
+}

@@ -1,0 +1,16 @@
+{
+  "name": "hello_card",
+  "preview": false,
+  "frames": 225,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 7.5,
+  "audioStream": false,
+  "bytes": 1828887,
+  "framesHash": "5ba7fd1e524ec2abc7c42de4b46a262ed625bbd6",
+  "workers": 2,
+  "renderSeconds": 16,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/engine/examples/out/hello_card.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/engine/examples/out/hello_card_contact.png"
+}

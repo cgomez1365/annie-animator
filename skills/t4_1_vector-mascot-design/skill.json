@@ -1,0 +1,24 @@
+{
+  "id": "t4.1",
+  "tier": 4,
+  "tierName": "Character and story",
+  "name": "Vector mascot design",
+  "slug": "vector-mascot-design",
+  "summary": "Draw Cog, the BGI cog mascot, as 14 separate vector parts driven by one rig record, with a style guide and a silhouette test.",
+  "prerequisites": ["t0.1", "t0.3"],
+  "status": "verified",
+  "qualityBar": [
+    "Ring outline repeats every tooth to 1e-9; reading the ring at mid-tooth radius finds exactly 8 teeth",
+    "Tooth height 12-24 percent of radius; tooth tops and gaps each 20-50 percent of the circumference",
+    "Default silhouette is left-right symmetric within 1 percent and reads as a cog at 28 px (viewed)",
+    "Smallest features at hero size: eye 40 px, brow 10 px, bolt 9 px, limbs 26 px",
+    "No hex literal in module.mjs (palette tokens and mixes only); BGI mark file byte-identical to the pinned hash and never imported",
+    "Each of the 14 parts changes the picture when hidden; 12 seeded random rigs render byte-identical twice",
+    "Demo: 1080x1920, 7.5 s, silent, engine QC passes, no frozen run, closer complete"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (64 checks passed, 0 failed; demo 1080x1920, 7.5 s, silent; engine QC on the card and the mp4 passed, 5 warnings all for text shorter than 0.5 s while sliding in). I viewed a design sheet (large front view, waving pose, silhouettes at 3 sizes, 3 expressions) twice, a full-size demo still and the final contact sheet, and judged them good. NOT checked: motion judged from stills and motion-energy numbers only, not played back by a person; the chip position moved 35 px after the last viewed contact sheet (re-tested, not re-viewed); the eye-lid drawing was changed during t4.3 (clip regions instead of painted lids) after those sheets, re-tested (64 checks) and seen in the t4.3 emotion sheet, but the t4.1 demo contact sheet was not re-viewed; the character has not been shown to the CEO, so the design is not approved; no audio."
+}

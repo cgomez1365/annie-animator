@@ -1,0 +1,68 @@
+{
+  "id": "example_16_prompt",
+  "title": "Spot the weak prompt",
+  "format": 16,
+  "brand": "bgi",
+  "fps": 30,
+  "cover": {
+    "t": 1.2
+  },
+  "hook": {
+    "pattern": "challenge",
+    "l1": "Spot the",
+    "l2": "weak prompt."
+  },
+  "beats": [
+    {
+      "id": "hook",
+      "kind": "hook",
+      "dur": 1.8,
+      "text": "Spot the weak prompt.",
+      "voice": "Spot the weak prompt.",
+      "visual": "two chat bubbles slide in, one vague one exact",
+      "events": [
+        0.9
+      ],
+      "openLoop": true
+    },
+    {
+      "id": "setup",
+      "kind": "setup",
+      "dur": 3.2,
+      "text": "Write me something.",
+      "voice": "Write me something. Vague in, vague out.",
+      "visual": "a chat window; the vague prompt types in and a limp answer appears",
+      "events": [
+        0.8,
+        1.9
+      ]
+    },
+    {
+      "id": "show",
+      "kind": "reveal",
+      "dur": 5,
+      "text": "Add who, what, and format.",
+      "voice": "Say who it is for, what you want, and the format.",
+      "visual": "three chips land one by one and the answer sharpens",
+      "events": [
+        0.9,
+        2,
+        3.1,
+        4.1
+      ]
+    },
+    {
+      "id": "payoff",
+      "kind": "payoff",
+      "dur": 2.9,
+      "text": "Specific in, useful out.",
+      "voice": "Specific in, useful out.",
+      "visual": "the answer card stamps in",
+      "events": [
+        0.8,
+        1.8
+      ],
+      "closeLoop": true
+    }
+  ]
+}

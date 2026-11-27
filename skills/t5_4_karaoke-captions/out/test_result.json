@@ -1,0 +1,28 @@
+{
+ "pass": true,
+ "checksPassed": 37,
+ "checksFailed": 0,
+ "failures": [],
+ "demoSeconds": 7.8,
+ "preview": false,
+ "framesHash": "0a8a5a80b805bc2e10cdb1abf6df6c23cd4a098e",
+ "qcWarnings": 16,
+ "metrics": {
+  "reading": {
+   "maxCps": 20,
+   "maxWps": 4.17,
+   "minShow": 0.99,
+   "captions": 16
+  },
+  "srtAgreement": "2454/2454",
+  "highlightVsAudioMs": {
+   "firstWord": 50,
+   "mostAfterPause": 27
+  },
+  "safeZone": {
+   "pillTop": 1386,
+   "pillBottom": 1554,
+   "maxRight": 920.3350033760071
+  }
+ }
+}

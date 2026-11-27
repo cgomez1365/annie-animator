@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 2738771,
+  "framesHash": "c9c01a19f68d36208e509436b0578fac95d8b730",
+  "workers": 2,
+  "renderSeconds": 76.3,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_1_virtual-camera/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_1_virtual-camera/out/demo_contact.png"
+}

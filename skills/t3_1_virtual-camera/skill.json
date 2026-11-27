@@ -1,0 +1,23 @@
+{
+  "id": "t3.1",
+  "tier": 3,
+  "tierName": "Camera, type and data",
+  "name": "Virtual camera",
+  "slug": "virtual-camera",
+  "summary": "Move a camera over a 2D scene: push-ins, pans, parallax depth, handheld and impact shake, whip pans with motion blur and rack-focus blur.",
+  "prerequisites": ["t0.1", "t0.2", "t0.3", "t0.4"],
+  "status": "verified",
+  "qualityBar": [
+    "Camera rig sums x/y/rot and multiplies zoom; pushIn, pan and whip hit their end values exactly and hold",
+    "Parallax maths: par 1 moves 100 of 100 px, par 0.3 moves 30, par 0 stays fixed; applyCamera equals worldToScreen",
+    "handheld is seeded, bounded by amp and never zero; shake is exactly zero outside its window and decays",
+    "motionBlur keeps total light within 3 percent, is deterministic and smears a moving square to over 2x its width",
+    "withBlur softens edges once per layer (not per draw call), keeps total light and honours the ctx transform",
+    "Demo: engine QC passes on the card and on the mp4 (no frozen frames, safe zones, 42 px floor, closer present)"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size 1080x1920 (70 checks passed, 0 failed; demo 8 s, silent; engine QC on the card and on the mp4 passed with 12 warnings: caption-band and in-motion rail/edge text under 0.5 s). A preview run (ANNIE_PREVIEW=1) also passed. I viewed out/contact.png and a mid-whip still (t=2.5) and judged them good: the whip blur reads as real motion blur, rack focus is clear. NOT checked: the motion was judged from stills and motion-energy numbers, never played back by a person; no audio; the whip with other scene content (many text-heavy layers) was not tried; cost with larger scenes is unmeasured (demo renders in about 1 min at preview size)."
+}

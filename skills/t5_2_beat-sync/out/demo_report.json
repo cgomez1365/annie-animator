@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 234,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 7.8,
+  "audioStream": false,
+  "bytes": 2075266,
+  "framesHash": "a3e5b66838d6a34ce1edba25919596e64a7ecfb3",
+  "workers": 2,
+  "renderSeconds": 23.5,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t5_2_beat-sync/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t5_2_beat-sync/out/demo_contact.png"
+}

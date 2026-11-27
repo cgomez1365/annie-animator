@@ -1,0 +1,57 @@
+{
+  "tier": "t6",
+  "tierName": "Production",
+  "date": "2026-11-19",
+  "built": [
+    "t6.1",
+    "t6.2",
+    "t6.3",
+    "t6.4",
+    "t6.5"
+  ],
+  "notBuilt": [],
+  "skills": [
+    {
+      "id": "t6.1",
+      "folder": "t6_1_series-templates",
+      "status": "verified",
+      "test": "node test.mjs exit 0 at 1080x1920, 38 checks, QC pass (1 transient warning)",
+      "measured": "one JSON script renders a 5-episode series (4 page types: steps, list, checklist, compare); all 5 episodes pass the engine checker; pill centred within 4 px at the same height and window title bar pixel-identical across episodes; validateSeries catches 9 planted faults; 7.5 s demo",
+      "notChecked": "not run against a ported real card (the real-card checks are in t6.2, t6.4, t6.5); the 12+ episode dot rail only checked for green pixels in one frame; no more than 4 items per page; played back by nobody"
+    },
+    {
+      "id": "t6.2",
+      "folder": "t6_2_batch-render-and-cache",
+      "status": "verified",
+      "test": "node test.mjs exit 0 at 1080x1920, 44 checks (about 2 min), QC pass (16 transient warnings)",
+      "measured": "batch framesHash equals the engine's; repeat run 0.3 s; incremental edit drew 21 of 60 frames (small card) and 105 of 495 frames on the ported tt10 (11 s vs 24 s first render, preview); a wrong changed-seconds hint is rejected by an 8-frame check; simulated crash plus a truncated frame resumed to the same framesHash; determinismReport true for clean cards and tt10, false for Math.random. Port of tt10 kept in ported/",
+      "notChecked": "incremental result of tt10 not compared with a full engine render (only the 60-frame card is); batch tests use 540x960 previews, not many full-size cards; mp4 bytes not compared with the engine's (encoder threads differ); never run with more than 2 workers"
+    },
+    {
+      "id": "t6.3",
+      "folder": "t6_3_platform-packaging",
+      "status": "verified",
+      "test": "node test.mjs exit 0 at 1080x1920, 49 checks, QC pass (1 transient warning)",
+      "measured": "the post-copy generator reproduces all 100 text blocks (TikTok caption, Shorts title, description, tags, Reels caption) of the 20 existing post files byte for byte and all validate; 141-char title, 7 hashtags, banned words, 101-char hook, # in a link, missing AI credits all caught; video file check on real encodes; tt10 cover chosen at t 1.2 (its own coverT) with a 1080x1440 3:4 grid file; packageCard end to end on tt10",
+      "notChecked": "no platform opened: limits and switches are the dated 2026-10-29 research (duration limits from memory, warnings only); cover scoring weights are my own heuristic checked on two cards; no Taboola output"
+    },
+    {
+      "id": "t6.4",
+      "folder": "t6_4_accessibility-and-safety",
+      "status": "verified",
+      "test": "node test.mjs exit 0 at 1080x1920, 41 checks (about 1.3 min), QC pass (1 transient warning)",
+      "measured": "scorer catches 7.5 and 4 flashes a second (3 a second passes), a red/green strobe of equal brightness as a red flash only, #475569 text at 2.58:1, a whole-picture shake, a full-screen moving pattern, a rushed six-word line, bad caption cues; motion kit full/reduced/none; ported tt10 scores 85 with its real caption file (3 lines over 42 characters, 2 quick button labels); the demo scores 96 in all three motion modes",
+      "notChecked": "a heuristic tripwire, not the Harding test or a medical clearance; thresholds are my reading of WCAG; zoom, spin and per-layer parallax not measured; the shake detector was only tested on synthetic cards; no real sensitive viewer looked at anything"
+    },
+    {
+      "id": "t6.5",
+      "folder": "t6_5_performance-profiling",
+      "status": "verified",
+      "test": "node test.mjs exit 0 at 1080x1920, 34 checks (about 2 min), QC pass (2 transient warnings)",
+      "measured": "per frame at full size: record 2 ms, raster 9, dither 17, PNG 73 (the card is about 11 percent); tt10 inside the 25/40 ms budget; hot spots by ablation (solid shapes 7.5 ms, gradient fills 4.1 ms); cached-vignette tt10 10.9 -> 7.3 ms, max 1 level per channel off the port; cost prediction 17.6 s vs 16.0 s; raw-pipe prototype makes a byte-identical mp4 in 5.9 s vs 16.0 s; the engine worker loop peaks at 3.7 GB for 225 frames (0.5 GB when it yields)",
+      "notChecked": "numbers from one shared machine under other load; the glow sprite's look was not compared with shadowBlur; rawRender proven only on hello_card; the engine itself was not changed"
+    }
+  ],
+  "engineRequests": "t6_ENGINE_REQUESTS.md (10 items; the big two: raw frames to ffmpeg instead of PNG, and yield in the worker loop to stop 4 GB of canvas memory per worker)",
+  "notes": "All five were rendered and tested at 1080x1920 with at most 2 workers. Every demo is 8.0 s except t6.1 (7.5 s). A shared fixture, the ported tt10 card, lives in t6_2_batch-render-and-cache/ported/."
+}

@@ -1,0 +1,31 @@
+{
+  "id": "t0.2",
+  "tier": 0,
+  "tierName": "Foundation",
+  "name": "Timeline and seeded randomness",
+  "slug": "timeline-and-seeded-rng",
+  "summary": "Schedule many things on one clock and add random-looking motion that is identical on every render.",
+  "prerequisites": [
+    "t0.1"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Same seed gives an identical scatter field, a different seed differs",
+    "scatterLoop is exactly 0 at loop start and repeats every period",
+    "staggerOrder covers every slot once in forward, reverse, center and seeded-random orders",
+    "Demo: two panels from the same seed move identically; QC passes"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (22 unit checks passed, 0 failed; demo rendered 1080x1920, 7.5 s, silent; engine QC on the card and on the mp4 passed with 1 warning). Engine self-tests (197 checks) passed. I viewed out/contact.png and judged it good. NOT checked: the motion was judged from stills, the contact sheet and motion-energy numbers, not played back by a person; no audio; the demo's text was only checked by the engine rules, not read aloud."
+}

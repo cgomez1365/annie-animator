@@ -1,0 +1,36 @@
+{
+  "id": "t1.4",
+  "tier": 1,
+  "tierName": "The tt10 core",
+  "name": "Persistent motion",
+  "slug": "persistent-motion",
+  "summary": "Keep every hold alive with running markers, highlight sweeps, pulsing meters, blinking cursors, bouncing dots and marching dashes.",
+  "prerequisites": [
+    "t0.1",
+    "t0.2",
+    "t0.4"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Marker sits on each node exactly at each leg end; route A-B-C-B-A repeats every 4 legs; eases in and out (inOutCubic midpoint exact)",
+    "Arrival ring fires on arrival and decays within 0.45 s; none on nodes not reached",
+    "Sweep: never more than two items bright, steps through every item, loops each 2.4 s period",
+    "Meters: seeded, within 0..1, real range over 0.3, never level with each other",
+    "Cursor has on and off phases, loops; typing dots hop 0.18 period apart",
+    "Six primitives change more than 20 pixels between frames 0.2 s apart at three start times (real canvas pixel tests)",
+    "Demo 8 s 1080x1920 silent: layout built by 1.2 s then four seconds of hold, QC reports no frozen run"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size 1080x1920 (45 checks passed, 0 failed; demo 8 s, silent; engine QC on the card and on the mp4 passed with 1 warning(s), motion floor 0.009710679216149412). I viewed out/contact.png (12 frames, thumbnails) and judged it good: marker, sweep, meters, dots, cursor all visibly in different states across the hold. NOT checked: motion judged from stills, pixel-diff tests and motion-energy numbers, not played back by a person; lineRunner (dot down a dimension line) and arrivalRing are unit-tested but only drawNodes' ring path is used in the demo; the window's lower right is sparse."
+}

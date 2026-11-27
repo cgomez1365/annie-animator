@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 2237486,
+  "framesHash": "6509695f41f8785c3a3ace2183343e7b145fe628",
+  "workers": 2,
+  "renderSeconds": 28.2,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t1_3_physical-object-motion/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t1_3_physical-object-motion/out/demo_contact.png"
+}

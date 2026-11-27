@@ -1,0 +1,35 @@
+{
+  "id": "t2.3",
+  "tier": 2,
+  "tierName": "Motion principles and effects",
+  "name": "Particles, glow and light",
+  "slug": "particles-glow-light",
+  "summary": "Seeded sparks, dust, motes and trails plus additive glow, thresholded bloom, sweeps and glints.",
+  "prerequisites": [
+    "t0.1",
+    "t0.2"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Deterministic: same seed, same particles; none before t0 or after the longest life",
+    "Analytic particle positions match step-by-step integration within 1 px (measured 0.003 px)",
+    "Motes loop exactly every period and stay in their box",
+    "Glow, bloom, sweep and glint verified on real pixels (falloff, halo, dim panels unchanged, clipped to box)",
+    "Full-frame bloom plus 120 particles under 250 ms per frame (measured about 60 ms)",
+    "Demo: flat vs lit hit, QC passes"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png",
+    "out/measured.json"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (34 checks passed, 0 failed; demo 8 s, 1080x1920, silent; engine QC on the card and the mp4 passed, 2 warnings). I viewed out/contact.png and a full-size crop of the impact frame and judged them good (found and fixed a visible brightness rectangle from bloom by adding a threshold). NOT checked: motion played back by a person; confetti mode (square) is implemented but not used in the demo and only drawn, not unit-tested on pixels; timing cost measured on a shared machine so numbers are noisy; no audio."
+}

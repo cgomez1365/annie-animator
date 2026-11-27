@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 225,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 7.5,
+  "audioStream": false,
+  "bytes": 2573616,
+  "framesHash": "51e32f5d740d466fb7834a1290a402b02a30d51c",
+  "workers": 2,
+  "renderSeconds": 17.6,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t4_3_expressions-and-acting/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t4_3_expressions-and-acting/out/demo_contact.png"
+}

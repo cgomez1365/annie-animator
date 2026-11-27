@@ -1,0 +1,30 @@
+{
+  "id": "t0.1",
+  "tier": 0,
+  "tierName": "Foundation",
+  "name": "Easing and springs",
+  "slug": "easing-and-springs",
+  "summary": "Pick the right motion curve or spring for every move so objects have weight.",
+  "prerequisites": [],
+  "status": "verified",
+  "qualityBar": [
+    "Every easing in E is exactly 0 at its start and 1 at its end (25 curves, 1e-9)",
+    "outBack(1.70158) overshoots 9-11 percent; outCubic and linear never overshoot",
+    "drop(): outBack carries past the floor, spring squash settles to 0, lands exactly on target",
+    "Springs match a 0.1 ms integration to 0.02 and converge to the target (engine tests)",
+    "Demo: four balls make the same trip with four feels; QC passes, no frozen run over 0.5 s"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (42 unit checks passed, 0 failed; demo rendered 1080x1920, 7.5 s, silent; engine QC on the card and on the mp4 passed with 1 warning). Engine self-tests (197 checks) passed. I viewed out/contact.png and judged it good. NOT checked: the motion was judged from stills, the contact sheet and motion-energy numbers, not played back by a person; no audio; the demo's text was only checked by the engine rules, not read aloud."
+}

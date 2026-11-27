@@ -1,0 +1,14 @@
+{
+  "tier": "t2",
+  "tierName": "Motion principles and effects",
+  "date": "2026-11-19",
+  "skills": [
+    { "id": "t2.1", "folder": "t2_1_anticipation-overshoot-followthrough", "status": "verified", "checks": 61, "notChecked": "motion played back by a person; no audio" },
+    { "id": "t2.2", "folder": "t2_2_squash-and-stretch", "status": "verified", "checks": 42, "notChecked": "motion played back by a person; final contact.png itself not viewed (earlier version and a full-size crop were); no audio" },
+    { "id": "t2.3", "folder": "t2_3_particles-glow-light", "status": "verified", "checks": 34, "notChecked": "motion played back by a person; confetti (square) mode not used in the demo or pixel-tested; no audio" },
+    { "id": "t2.4", "folder": "t2_4_masks-reveals-wipes", "status": "verified", "checks": 98, "notChecked": "motion played back by a person; revealSoft and the text reveals are unit-tested but not in the demo video; no audio" },
+    { "id": "t2.5", "folder": "t2_5_shape-morph-and-path-animation", "status": "verified", "checks": 67, "notChecked": "motion played back by a person; fillPath during a morph and morphs between different topologies not tried; rotated-ellipse arcs parsed but not checked against a reference; no audio" }
+  ],
+  "howChecked": "Each skill: node test.mjs exit 0 at full size 1080x1920 (unit checks, demo render 8 s silent, engine QC on the card and the mp4). Contact sheet viewed for each (t2.2 an earlier version plus a full-size crop). Demos judged from stills; nothing was played back by a person.",
+  "engineRequests": "t2_ENGINE_REQUESTS.md (none blocking)"
+}

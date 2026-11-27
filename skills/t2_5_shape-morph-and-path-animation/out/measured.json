@@ -1,0 +1,13 @@
+{
+ "halfCircleLengthRatio": 1.00014,
+ "cubicLengthRatio": 0.99998,
+ "sCurveLength": 393.4,
+ "iconLengths": {
+  "play": 54.4,
+  "pause": 88.6,
+  "menu": 48,
+  "x": 33.9,
+  "check": 22.6,
+  "heart": 59
+ }
+}

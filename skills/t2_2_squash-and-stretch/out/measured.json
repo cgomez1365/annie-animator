@@ -1,0 +1,10 @@
+{
+ "ballMaxSquashPct": 30,
+ "ballMaxStretchPct": 24.6,
+ "contactSquashFrames": 2.9,
+ "recoveryFrames": 5.6,
+ "tapMax": 0.09999943057580175,
+ "tapRecoveryFrames": 8.4,
+ "popPeakPct": 14.2,
+ "areaWorstError": 1.1102230246251565e-16
+}

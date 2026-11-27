@@ -1,0 +1,23 @@
+{
+  "id": "t4.2",
+  "tier": 4,
+  "tierName": "Character and story",
+  "name": "2D rigging",
+  "slug": "2d-rigging",
+  "summary": "Give Cog bones, two-bone IK, skinned limbs, 12 poses and walk and hop cycles whose feet stay planted.",
+  "prerequisites": ["t4.1", "t0.1", "t0.2"],
+  "status": "verified",
+  "qualityBar": [
+    "IK end effector within 1e-9 of every reachable target; bone lengths kept; unreachable targets reported and straightened",
+    "Skinning reproduces the rest outline exactly; far points move rigidly; area above 90 percent at 90 degrees and 80 percent at 92 degrees plus; no stretched edges",
+    "Walk: stance foot floor position constant to 1e-9, ankle on the floor to 1e-6, swing lift exactly 0.16, no foot under the floor, all legs within reach over 400 phases, cycle loops",
+    "Hop: apex within 0.02 of requested height, anticipation, stretch and landing squash present, feet tucked in flight and planted in the crouch",
+    "12 poses, finite, pairwise different, hands within 2.1 units",
+    "Demo: 1080x1920, 7.5 s, silent, QC pass, nothing frozen"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (118 checks passed, 0 failed; demo 1080x1920, 7.5 s, silent; engine QC on the card and the mp4 passed, 3 warnings for text shorter than 0.5 s while sliding in). I viewed a sheet of all 12 poses with skeleton overlay plus eight walk frames and eight hop frames, and two contact sheets of the demo, and judged the motion design good after moving Cog lower and shrinking the hop so the antenna no longer touches the label. NOT checked: motion judged from stills and numbers, not played back by a person; the label chip moved 28 px after the last viewed contact sheet (re-tested, not re-viewed); poses are subtle at small sizes (hips, think) and were not tuned against the CEO's taste; skinning is a two-bone linear blend only (no 3-bone chains, no corrective shapes); no audio."
+}

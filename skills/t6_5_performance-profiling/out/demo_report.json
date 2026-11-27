@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 1729928,
+  "framesHash": "8bde2492ad1700ed571fe429798bf2b86b739173",
+  "workers": 2,
+  "renderSeconds": 16.9,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t6_5_performance-profiling/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t6_5_performance-profiling/out/demo_contact.png"
+}

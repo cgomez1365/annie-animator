@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 2942153,
+  "framesHash": "1818695a86d3a1882a62d0261e663ec0bf6be92f",
+  "workers": 2,
+  "renderSeconds": 18.5,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_4_layout-and-composition/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_4_layout-and-composition/out/demo_contact.png"
+}

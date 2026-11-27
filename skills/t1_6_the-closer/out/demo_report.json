@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 1956861,
+  "framesHash": "7d436ec0d48e1b1f8398725a07516c8a49b70bec",
+  "workers": 2,
+  "renderSeconds": 20.4,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t1_6_the-closer/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t1_6_the-closer/out/demo_contact.png"
+}

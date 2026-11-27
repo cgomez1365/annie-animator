@@ -1,0 +1,7 @@
+1
+00:00:00,570 --> 00:00:02,540
+Paris gets a very high one.
+
+2
+00:00:02,560 --> 00:00:04,550
+Most other words get almost none.

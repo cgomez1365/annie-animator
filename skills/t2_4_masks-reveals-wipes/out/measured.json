@@ -1,0 +1,19 @@
+{
+ "coverageAtHalf": {
+  "wipe right": 0.5,
+  "wipe left": 0.5,
+  "wipe down": 0.5,
+  "wipe up": 0.5,
+  "iris": 0.392,
+  "split center": 0.5,
+  "split edges": 0.5,
+  "diagonal 45": 0.502,
+  "diagonal 20": 0.5,
+  "scan sweep": 0.503,
+  "scan blinds": 0.523,
+  "ink right": 0.745,
+  "ink centre": 0.84,
+  "soft": 0.5
+ },
+ "note": "fraction of the box revealed at k 0.5 (solid content)"
+}

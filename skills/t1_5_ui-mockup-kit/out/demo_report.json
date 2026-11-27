@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 1984686,
+  "framesHash": "c8d101aa33ab6b40e55947af425f04bc01aec666",
+  "workers": 2,
+  "renderSeconds": 21.7,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t1_5_ui-mockup-kit/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t1_5_ui-mockup-kit/out/demo_contact.png"
+}

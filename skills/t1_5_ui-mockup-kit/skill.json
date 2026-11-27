@@ -1,0 +1,35 @@
+{
+  "id": "t1.5",
+  "tier": 1,
+  "tierName": "The tt10 core",
+  "name": "UI mockup kit",
+  "slug": "ui-mockup-kit",
+  "summary": "Illustrated product screens: fields that fill, buttons that press, bubbles that pop, bars that grow, stamps that slam, toggles, tabs and ticks that draw.",
+  "prerequisites": [
+    "t0.1",
+    "t1.1",
+    "t1.2"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Button press hits exactly 0.96 at its lowest point and the label swaps at pressT + 0.1",
+    "Bubble pop overshoots 7-13 percent and ends at 1; stamp starts at 2.2, ends at 1, crosses its final size at least 3 times; toggle knob overshoots over 1.05",
+    "Tab underline lands exactly on the index in 0.35 s; tick done in 0.25 s; count-up runs 0 to the value",
+    "Each of 9 parts draws nothing before its t0 and over 300 lit pixels after (real canvas pixels)",
+    "Field fill bar measured at fillW +-8 px; pressed button smaller than resting; stat bar and tick stroke grow progressively; toggle knob moves right",
+    "Demo 8 s 1080x1920 silent with two tabs: QC passes, no frozen run over 0.5 s"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size 1080x1920 (60 checks passed, 0 failed; demo 8 s, silent; engine QC on the card and on the mp4 passed with 4 warning(s), motion floor 0.00818290134270986). I viewed out/contact.png (12 frames, thumbnails) after fixing a stamp that covered the toggle: fields filling, toggle on, button 'Checked in', stamp over the form, second tab with bars, ticks and bubble. NOT checked: motion judged from stills, pixel tests and motion-energy numbers, not played back by a person; signaturePad and formField's `value` typing mode are unit-tested but not in the demo; the stamp's elastic slam crosses scale 1 in only two frames before wobbling, which I did not judge on playback; the bubble is small at demo scale."
+}

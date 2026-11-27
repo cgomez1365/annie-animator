@@ -1,0 +1,23 @@
+{
+  "id": "t4.4",
+  "tier": 4,
+  "tierName": "Character and story",
+  "name": "Lip-sync",
+  "slug": "lip-sync",
+  "summary": "Drive Cog's mouth from a voice track and its text: loudness envelope, syllables, 11 mouth shapes, lead and smoothing.",
+  "prerequisites": ["t4.1", "t4.3", "t0.2"],
+  "status": "verified",
+  "qualityBar": [
+    "Syllable counts right for the test word list; AEON spoken Ee-on; onset and closure classes correct",
+    "Speech segments within 0.12 s of the measured VO-script times for at least 90 percent of rows over 8 Kokoro tracks (36 of 39 measured)",
+    "Synthetic ground truth: syllable times recovered within 30 ms rms and 80 ms max (measured 6 ms and 20 ms)",
+    "tt1: syllables per segment equal syllables per sentence, all inside measured phrase windows; first and last syllable of 29 of 29 rows of 6 more tracks inside their measured row",
+    "Mouth: closed in silence (max 0.06, measured 0.005), correlation with loudness above 0.6 (0.68), no flapping (6 reversals per second), lip closures shut within 70 ms and held 0.1 s",
+    "Demo: 1080x1920, 7.5 s, silent, QC pass, nothing frozen"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (67 checks passed, 0 failed; demo 1080x1920, 7.5 s, silent; engine QC passed). I viewed a 12-frame story sheet of the demo (frames at the first and second slogan lines, with the mouth, word highlight and viseme row) and judged it good. NOT checked: lips against video of a real speaker or a human viewer judging whether the sync looks right; only Kokoro Heart tracks were exercised (the Michael voice and other languages were not); the syllable-count list was tuned after I saw failures (so 100 percent is optimistic); music under the voice; the demo's audio is analysed but not in the MP4, so I could not hear it against the picture."
+}

@@ -1,0 +1,16 @@
+[0:a]aresample=48000,aformat=channel_layouts=mono,adelay=350:all=1[v0];
+[v0]amix=inputs=1:normalize=0:duration=longest,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,aformat=channel_layouts=stereo,apad=whole_dur=7.8[voice];
+[1:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.1600,adelay=300|300[x0];
+[2:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.2560,adelay=650|650[x1];
+[3:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.3200,adelay=1466|1466[x2];
+[4:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.2240,adelay=1863|1863[x3];
+[5:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.2880,adelay=2640|2640[x4];
+[6:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.3200,adelay=3633|3633[x5];
+[7:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.2560,adelay=4051|4051[x6];
+[x0][x1][x2][x3][x4][x5][x6]amix=inputs=7:normalize=0:duration=longest,apad=whole_dur=7.8[fx];
+[voice]asplit=3[vB][vC][vA];
+[8:a]aresample=48000,aformat=channel_layouts=stereo,atrim=start=0:end=7.8,asetpts=PTS-STARTPTS,volume=0.16,afade=t=in:d=2,afade=t=out:st=4.8:d=3,apad=whole_dur=7.8[mus0];
+[mus0][vA]sidechaincompress=threshold=0.06:ratio=2:attack=15:release=450:makeup=1[mus];
+[fx]asplit=2[fxB][fxC];
+[mus]asplit=2[musB][musC];
+[vB][fxB][musB]amix=inputs=3:normalize=0:duration=longest,atrim=0:7.8,asetpts=PTS-STARTPTS[sum]

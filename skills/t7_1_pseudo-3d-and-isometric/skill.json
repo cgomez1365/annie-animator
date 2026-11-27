@@ -1,0 +1,23 @@
+{
+  "id": "t7.1",
+  "tier": 7,
+  "tierName": "Masterwork and 3D",
+  "name": "Pseudo 3D and isometric",
+  "slug": "pseudo-3d-and-isometric",
+  "summary": "Make flat canvas cards feel three-dimensional: flipping cards, isometric blocks, shaded faces, cast shadows and parallax depth.",
+  "prerequisites": ["t0.1", "t0.2", "t0.3", "t0.4"],
+  "status": "verified",
+  "qualityBar": [
+    "Projection exact: origin at (cx,cy), persp scale f/(d+z), iso axes 30 degrees with 0.8165 foreshortening",
+    "Iso cube shows exactly 3 faces; card shows front at 0, back at 180, only its edge at 90 degrees; back texture not mirrored",
+    "Painter's sort puts the near quad over the far one; top face brightest, side faces differ by 0.05 or more",
+    "Textures land at their mapped places flat-on and under strong perspective (pixel probes), 0 holes in 841 interior samples",
+    "Cast shadow darkens the floor, lower light gives longer shadow, contact shadow fades with height; parallax deeper = slower, smaller, fainter",
+    "Demo 7.5 s 1080x1920 silent; engine QC passes on card and mp4 with no frozen run over 0.5 s"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (58 unit checks passed, 0 failed; demo rendered 1080x1920, 7.5 s, silent; engine QC on the card and on the mp4 passed with 1 warning, the Follow button text under 42 px for 0.10 s while it pops in). I viewed out/contact.png and judged it good; one transient flaw seen: at about 1.4 s the entering card briefly overlaps the tops of the cubes that are still bouncing. NOT checked: motion judged from stills and motion-energy numbers, not played back by a person; painter's sort is only proven for the demo layout and the unit cases, not for arbitrary interleaved objects; no audio."
+}

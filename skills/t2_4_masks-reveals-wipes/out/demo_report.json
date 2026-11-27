@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 1849351,
+  "framesHash": "2eea71716156e140c505d75ae4ab7950417bfdc7",
+  "workers": 2,
+  "renderSeconds": 28.8,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t2_4_masks-reveals-wipes/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t2_4_masks-reveals-wipes/out/demo_contact.png"
+}

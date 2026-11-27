@@ -1,0 +1,35 @@
+{
+  "id": "t1.1",
+  "tier": 1,
+  "tierName": "The tt10 core",
+  "name": "Window frame",
+  "slug": "window-frame",
+  "summary": "Draw the macOS-style window with traffic lights, a crossfading title, an entrance and exit, an adjustable size and content clipped to the inner rect.",
+  "prerequisites": [
+    "t0.1",
+    "t0.3",
+    "t0.4"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Default window is exactly x 72, y 560, w 936, h 640, radius 22, title bar 72; inner rect maths exact (unit tests)",
+    "Clip proved with real pixels: painted inside the content area, never in the title bar, border, outside or the rounded bottom corners",
+    "Title crossfade alphas sum to 1 for the whole 0.3 s; afterwards only the new title at alpha 1",
+    "Entrance 0.4 s outCubic with an 80 px rise; exit from closerAt-0.1 to closerAt+0.3 (exact endpoints)",
+    "validateWindow fails a window above y 560, wider than the frame, or reaching y 1580",
+    "Demo 7.5 s 1080x1920 silent: engine QC passes, no frozen run over 0.5 s, nothing in the red zones, closer correct"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size 1080x1920 (40 checks passed, 0 failed; demo 7.5 s, silent; engine QC on the card and on the mp4 passed with 1 warning(s), motion floor 0.010690262347091863). I viewed out/contact.png (12 frames, thumbnails) and judged it good: window rises, title crossfades, radar rings and sliding chips are cut by the inner rect, resize settles. NOT checked: motion was judged from stills, the contact sheet and motion-energy numbers, not played back by a person; no audio; the 42 px floor warning on the closer's Follow label during its 0.1 s pop-in is the engine's own closer, not this module."
+}

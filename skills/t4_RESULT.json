@@ -1,0 +1,26 @@
+{
+  "tier": "Tier 4: Character and story",
+  "date": "2026-11-19",
+  "built": ["t4.1", "t4.2", "t4.3", "t4.4", "t4.5"],
+  "notBuilt": [],
+  "skills": [
+    { "id": "t4.1", "name": "vector-mascot-design", "folder": "t4_1_vector-mascot-design", "status": "verified", "testExit": 0, "checks": 64, "demo": "t4_1_vector-mascot-design/out/demo.mp4" },
+    { "id": "t4.2", "name": "2d-rigging", "folder": "t4_2_2d-rigging", "status": "verified", "testExit": 0, "checks": 118, "demo": "t4_2_2d-rigging/out/demo.mp4" },
+    { "id": "t4.3", "name": "expressions-and-acting", "folder": "t4_3_expressions-and-acting", "status": "verified", "testExit": 0, "checks": 75, "demo": "t4_3_expressions-and-acting/out/demo.mp4" },
+    { "id": "t4.4", "name": "lip-sync", "folder": "t4_4_lip-sync", "status": "verified", "testExit": 0, "checks": 67, "demo": "t4_4_lip-sync/out/demo.mp4" },
+    { "id": "t4.5", "name": "storyboard-and-hooks", "folder": "t4_5_storyboard-and-hooks", "status": "verified", "testExit": 0, "checks": 121, "demo": "t4_5_storyboard-and-hooks/out/demo.mp4" }
+  ],
+  "character": "Cog: a green 8-tooth cog with a dark face plate, tube arms and legs, white mittens and shoes, a cyan antenna. 14 separate vector parts driven by one rig record (makeRig in t4.1). The BGI mark is never used or altered; a test pins engine/mark_paths.mjs by hash.",
+  "touchedEngine": false,
+  "engineRequests": "skills/t4_ENGINE_REQUESTS.md (four conveniences, none blocking)",
+  "crossSkillChanges": "t4.1 drawEye was changed during t4.3 (lids became clip regions to remove a pale ring); t4.1 and every later skill were re-tested after it. t4.2 poseTrack now returns copies.",
+  "notChecked": [
+    "Nothing was played back or approved by a person; every demo was judged from stills, contact sheets and motion-energy numbers.",
+    "The mascot design has not been shown to the CEO, so it is not approved.",
+    "Lip-sync was exercised only on Kokoro Heart tracks, and no one judged it against sound; the demo MP4 is silent by engine rule.",
+    "Syllable-count accuracy (100 percent on my test list) is optimistic: the list was tuned after failures. Voice-time model is in-sample.",
+    "The pacing thresholds in t4.5 are habits, not measured on BGI audience data; hook patterns were not tested with viewers.",
+    "Some label chips and the t4.1/t4.2 demo layouts were nudged after the last viewed contact sheet and re-tested by numbers only."
+  ],
+  "images": "I viewed about 17 images in total."
+}

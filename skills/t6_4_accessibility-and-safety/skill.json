@@ -1,0 +1,34 @@
+{
+  "id": "t6.4",
+  "tier": 6,
+  "tierName": "Production",
+  "name": "Accessibility and safety",
+  "slug": "accessibility-and-safety",
+  "summary": "Score a card for flashing, contrast, reading time and motion, check caption files, and build calm motion modes into a card.",
+  "prerequisites": [
+    "t0.1",
+    "t0.2",
+    "t0.4"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Colour maths matches the WCAG references; palette helper marks dim #475569 as never for words",
+    "Planted faults are caught: 7.5 and 4 flashes a second, a red flash of equal brightness, 2.6:1 text, whole-picture shake, full-screen moving pattern, a rushed six-word line, bad caption cues",
+    "Safe neighbours pass: exactly 3 flashes a second, a 1 Hz pulse with a note, a calm readable card scores 95 or more with no issues",
+    "The demo passes in full, reduced and none motion modes and scores at least the 96 its dial shows",
+    "The ported tt10 and its real caption file pass with a score of 85 and honest notes"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (41 checks passed, 0 failed, about 1.3 min). Colour maths, flash counting, caption rules and the motion kit unit-checked; nine planted-fault cards behaved as designed (7.5 and 4 flashes a second fail, exactly 3 passes, equal-brightness red/green strobe caught as a red flash only, #475569 text fails at 2.58:1, shake and full-screen moving pattern caught, rushed six-word line flagged, calm card 96+); the demo passes in full, reduced and none modes with a real score of 96 (the 96 on its dial); engine hello_card scores 100; ported tt10 scores 85 with its real caption file (real findings: 3 caption lines over 42 characters, 2 quick button labels). Demo rendered 1080x1920, 8.0 s, silent, checker passed. I viewed out/contact.png and judged it good. NOT checked: this is a heuristic tripwire, not the Harding test or a medical clearance; the flash block size (a ninth of the frame) and all thresholds are my reading of WCAG, not validated against a certified analyser; zoom, spin and per-layer parallax are not measured; the shake detector was only tested on a synthetic card and a whole-frame pattern, not on a real shaking card; no real viewer with photosensitivity or colour-blindness looked at anything; motion judged from stills."
+}

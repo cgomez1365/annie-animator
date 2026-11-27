@@ -1,0 +1,11 @@
+{
+ "pass": true,
+ "checksPassed": 57,
+ "checksFailed": 0,
+ "failures": [],
+ "demoSeconds": 8,
+ "preview": false,
+ "framesHash": "7d436ec0d48e1b1f8398725a07516c8a49b70bec",
+ "qcWarnings": 1,
+ "motionMin": 0.00851077942200649
+}

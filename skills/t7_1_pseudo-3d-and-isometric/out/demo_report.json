@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 225,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 7.5,
+  "audioStream": false,
+  "bytes": 3450079,
+  "framesHash": "9b9ed884401c696ae47d43d180acd929ea84c71e",
+  "workers": 2,
+  "renderSeconds": 29.6,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_1_pseudo-3d-and-isometric/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_1_pseudo-3d-and-isometric/out/demo_contact.png"
+}

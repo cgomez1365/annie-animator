@@ -1,0 +1,32 @@
+{
+  "id": "t0.3",
+  "tier": 0,
+  "tierName": "Foundation",
+  "name": "Render pipeline",
+  "slug": "render-pipeline",
+  "summary": "Turn a card file into a silent 1080x1920 MP4 and a contact sheet, identical on every run.",
+  "prerequisites": [
+    "t0.1",
+    "t0.2"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "Output is H.264, no audio, 540x960 preview or 1080x1920 full, duration = frames/30 within 0.05 s",
+    "The same frame hashes the same twice; 1 worker and 2 workers give the same framesHash",
+    "--range renders exactly the requested frames",
+    "7.5 s card renders in under 40 s at full size with 2 workers (measured 17 s); QC passes"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (16 unit checks passed, 0 failed; demo rendered 1080x1920, 7.5 s, silent; engine QC on the card and on the mp4 passed with 1 warning). Engine self-tests (197 checks) passed. I viewed out/contact.png and judged it good. NOT checked: the motion was judged from stills, the contact sheet and motion-energy numbers, not played back by a person; no audio; the demo's text was only checked by the engine rules, not read aloud."
+}

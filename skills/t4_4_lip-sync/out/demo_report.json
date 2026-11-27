@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 225,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 7.5,
+  "audioStream": false,
+  "bytes": 2628615,
+  "framesHash": "48ca8fa4c8947246ef2db14ebc13fd7a2b01ec51",
+  "workers": 2,
+  "renderSeconds": 17.7,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t4_4_lip-sync/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t4_4_lip-sync/out/demo_contact.png"
+}

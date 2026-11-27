@@ -1,0 +1,62 @@
+#!/usr/bin/env node
+// t3.4 test: grid, thirds, fitting on real strings, auto layout against the safe zones, contrast maths, then render the demo and run the quality checker.
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import { runSkillTest } from '../../engine/testkit.mjs';
+import { createCanvas, setFont, textW, P } from '../../engine/index.mjs';
+import { ZONES, maxWidthAt, makeGrid, thirds, opticalY, gridLayout, stackY, centerOfMass, typeScale, ROLES, fitPx, autoLayout, drawItem, layoutIssues, composeCheck, contrastRatio, ensureContrast, luminance } from './module.mjs';
+
+const mk = () => { const c = createCanvas(1080, 1920).getContext('2d'); c.fillStyle = '#000'; c.fillRect(0, 0, 1080, 1920); return c; };
+const inkBox = c => { const d = c.getImageData(0, 0, 1080, 1920).data; let x0 = 9999, y0 = 9999, x1 = -1, y1 = -1; for (let y = 0; y < 1920; y++) for (let x = 0; x < 1080; x++) if (Math.max(d[(y * 1080 + x) * 4], d[(y * 1080 + x) * 4 + 1], d[(y * 1080 + x) * 4 + 2]) > 60) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } return { x0, y0, x1, y1 }; };
+
+const HEADLINES = ['Say one thing, big.', 'Local AI that works for you', 'Your files stay in your hands', 'Build a block in an afternoon', 'The cog in the machine', 'Ask once, get the whole draft', 'Three steps from idea to ship', 'Plan it once. Same every time.', 'Make the key word glow', 'Weekly report sent while you sleep', 'Fewer tabs, more finished work', 'A calm place to think and build'];
+
+await runSkillTest({ dir: import.meta.dirname, checks: async ({ ok, near }) => {
+  const c = mk();
+  // ---- zones, grid, thirds
+  near(maxWidthAt(300, 400), 936, 1e-9, 'maxWidthAt outside the rail band is 936'); near(maxWidthAt(900, 1000), 776, 1e-9, 'maxWidthAt inside the rail band is 776 (centre 540, limit x 928)'); near(maxWidthAt(700, 900), 776, 1e-9, 'maxWidthAt for a span touching y 800 is 776'); near(maxWidthAt(1000, 1100, 500), 856, 1e-9, 'a centre at x 500 inside the rail band allows 856');
+  const g = makeGrid(); near(g.x(0), 72, 1e-9, 'grid starts at the margin'); near(g.x(11) + g.colW, 1008, 1e-9, 'grid ends at 1008'); near(g.span(0, 12)[1], 936, 1e-9, 'span of 12 columns is 936'); near(g.span(3, 3)[0], g.x(3), 1e-9, 'span x is the column x'); near(g.span(0, 6)[1] + g.gutter + g.span(6, 6)[1], 936, 1e-9, 'two halves plus a gutter make the full width');
+  const th = thirds(); ok(th.xs[0] === 360 && th.xs[1] === 720 && th.ys[0] === 640 && th.ys[1] === 1280 && th.points.length === 4, 'thirds lines and four power points'); near(opticalY(400, 850, 400), 400 + 450 * 0.46, 1e-9, 'opticalY puts the centre at 46 percent');
+  ok(ZONES.full.y >= 250 && ZONES.full.y + ZONES.full.h <= 1580 && ZONES.full.x + ZONES.full.w <= 1008, 'ZONES.full is inside the platform limits');
+  // ---- tiles
+  const t3 = gridLayout(3, { x: 100, y: 800, w: 800, h: 500 }, { cols: 2, gap: 24 }), t4 = gridLayout(4, { x: 100, y: 800, w: 800, h: 500 }, { cols: 2, gap: 24 });
+  ok(t3.every(r => Math.abs(r.w - t3[0].w) < 1e-9 && Math.abs(r.h - t3[0].h) < 1e-9), 'gridLayout: equal tiles'); near(t3[2].x, 100 + (t3[0].w + 24) / 2, 1e-9, 'gridLayout: the short last row is centred'); near(t4[3].y + t4[3].h, 1300, 1e-9, 'gridLayout: tiles fill the box height'); near(t4[1].x + t4[1].w, 900, 1e-9, 'gridLayout: tiles fill the box width');
+  let ov = false; for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) { const a = t4[i], b = t4[j]; if (a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h) ov = true; } ok(!ov, 'gridLayout: tiles never overlap');
+  ok(JSON.stringify(stackY([100, 50, 80], { y: 10, gap: 20 })) === JSON.stringify([10, 130, 200]), 'stackY'); const cm = centerOfMass([{ x: 0, y: 0, w: 100, h: 100 }, { x: 900, y: 0, w: 100, h: 100 }]); near(cm[0], 500, 1e-9, 'centerOfMass of two equal blocks');
+  ok([0, 1, 2, 3, 4].map(s => typeScale(s)).join() === '42,56,75,100,133', 'typeScale 42 56 75 100 133');
+  // ---- fitPx on real strings
+  const a = fitPx(c, 'Say one thing, big.', { maxW: 776, maxLines: 2, maxPx: 104 }), b = fitPx(c, 'Say one thing, big enough to read on a small phone screen.', { maxW: 776, maxLines: 3, maxPx: 104 });
+  ok(a.fits && a.px >= 90, `short headline stays big (${a.px}px)`); ok(b.fits && b.px < a.px && b.lines.length <= 3 && b.px >= 42, `long headline shrinks (${b.px}px, ${b.lines.length} lines)`);
+  const imp = fitPx(c, 'A very long headline that cannot possibly fit on two short lines at this width at all really', { maxW: 500, maxLines: 2 }); ok(!imp.fits && imp.px === 42, 'impossible copy: fits false at the 42 px floor');
+  let allFit = true, widest = 0, floorOk = true; for (const h of HEADLINES) { const r = fitPx(c, h, { maxW: 776, maxLines: 3, maxPx: 104 }); setFont(c, 'sg', r.px, 700, 0); const w = Math.max(...r.lines.map(l => textW(c, l, r.px, 0))); widest = Math.max(widest, w); if (!r.fits || w > 776.5 || r.lines.length > 3) allFit = false; if (r.px < 42) floorOk = false; }
+  ok(allFit && floorOk, `12 real headlines all fit 776 px in at most 3 lines (widest ${widest.toFixed(0)})`);
+  setFont(c, 'sg', 80, 700, 0); const bal = fitPx(c, 'Ship the report before lunch today', { maxW: 760, maxLines: 2, maxPx: 80 }); const bw = bal.lines.map(l => textW(c, l, bal.px, 0)); ok(bal.lines.length === 2 && Math.min(...bw) / Math.max(...bw) > 0.6, `fitPx balances lines (${bw.map(Math.round)})`);
+  const mn = fitPx(c, 'Hi', { maxW: 400, maxPx: 30, minPx: 20 }); ok(mn.px >= 42, 'fitPx never goes under 42 even when asked');
+  // ---- autoLayout
+  const blocks = [{ text: 'One idea', role: 'eyebrow' }, { text: 'Say one thing, big.', role: 'head', maxLines: 2 }, { text: 'Then fit it to the box.', role: 'sub' }], L = autoLayout(c, blocks, { box: { x: 72, y: 780, w: 936, h: 470 } });
+  ok(L.fits && L.issues.length === 0, `autoLayout: clean (${L.issues.join('; ')})`); ok(L.items[1].px > L.items[2].px && L.items[2].px > L.items[0].px - 1 && L.items[1].px / L.items[2].px >= 1.25, `autoLayout: hierarchy head ${L.items[1].px} > sub ${L.items[2].px}`); ok(L.items[0].y1 <= L.items[1].y0 && L.items[1].y1 <= L.items[2].y0, 'autoLayout: blocks stack without overlap');
+  ok(L.bounds.y0 >= 780 && L.bounds.y1 <= 1250, 'autoLayout: stays inside its box'); ok(L.items.every(i => i.px >= 42), 'autoLayout: every block 42 px or more');
+  const T = autoLayout(c, blocks, { box: { x: 72, y: 780, w: 936, h: 470 }, vAlign: 'top' }); near(T.items[0].y0, 780, 1e-9, 'autoLayout top align starts at the box top'); ok(L.items[0].y0 > T.items[0].y0 || L.bounds.y1 - L.bounds.y0 >= 465, 'autoLayout optical align sits lower than top align');
+  const lng = autoLayout(c, [{ text: 'One idea', role: 'eyebrow' }, { text: 'Say one thing, big enough to read on a small phone screen.', role: 'head', maxLines: 3 }, { text: 'Longer copy shrinks to fit, never under 42 px.', role: 'sub' }, { text: 'Body copy can run a few lines when the room allows it.', role: 'body' }], { box: { x: 72, y: 700, w: 936, h: 640 } });
+  ok(lng.fits && lng.issues.length === 0, `autoLayout: longer copy fits (${lng.issues.join('; ')})`); ok(lng.scale < 1 || lng.items[1].px < 104, `autoLayout: long copy scales down (scale ${lng.scale.toFixed(2)}, head ${lng.items[1].px}px)`); ok(lng.items.every(i => i.px >= 42), 'autoLayout: long copy still 42 px or more'); ok(lng.bounds.y1 <= 1340 + 1 && lng.bounds.y0 >= 700 - 1, 'autoLayout: long copy still inside the box');
+  const huge = autoLayout(c, [{ text: 'One idea', role: 'eyebrow' }, { text: 'Say one thing, big enough to read on a small phone screen without squinting at all.', role: 'head', maxLines: 3 }, { text: 'Longer copy shrinks to fit, never under 42 px, and keeps its levels apart.', role: 'sub' }, { text: 'Body copy can run a few lines when the room allows it, and it wraps evenly across the width.', role: 'body' }], { box: { x: 72, y: 700, w: 936, h: 640 } });
+  ok(!huge.fits && huge.items.every(i => i.px >= 42), 'autoLayout: copy that cannot fit says fits:false and still never goes under 42 px');
+  const rail = autoLayout(c, [{ text: 'A headline that wants the whole width of the frame', role: 'head', maxLines: 3 }], { box: { x: 72, y: 900, w: 936, h: 500 } }); ok(rail.bounds.x1 < 940, `autoLayout in the rail band stays left of x 940 (right edge ${rail.bounds.x1.toFixed(0)})`); ok(rail.items[0].w <= 776.5, 'autoLayout in the rail band: width at most 776');
+  const hi = autoLayout(c, [{ text: 'A headline that wants the whole width of the frame', role: 'head', maxLines: 2 }], { box: { x: 72, y: 300, w: 936, h: 300 } }); ok(hi.items[0].w > 776, `above the rail band the line may use the full width (${hi.items[0].w.toFixed(0)} px)`);
+  // ink placement: the drawn pixels sit inside the item's box
+  let inkOk = true, msg = ''; for (const it of L.items) { const cc = mk(); drawItem(cc, it); const ib = inkBox(cc); if (ib.y0 < it.y0 - 6 || ib.y1 > it.y1 + 6 || Math.abs((ib.x0 + ib.x1) / 2 - 540) > 6) { inkOk = false; msg += ` ${it.role}:${JSON.stringify(ib)} vs ${it.y0.toFixed(0)}-${it.y1.toFixed(0)}`; } } ok(inkOk, `drawItem ink sits inside the laid-out box and centred${msg}`);
+  // ---- checks
+  ok(layoutIssues({ items: [{ y0: 200, y1: 300, px: 100, w: 500, cx: 540 }] }).some(s => /above/.test(s)), 'layoutIssues flags text above y 250'); ok(layoutIssues({ items: [{ y0: 1500, y1: 1620, px: 100, w: 500, cx: 540 }] }).some(s => /below/.test(s)), 'layoutIssues flags text below y 1580');
+  ok(layoutIssues({ items: [{ y0: 1000, y1: 1100, px: 100, w: 900, cx: 540 }] }).some(s => /rail/.test(s)), 'layoutIssues flags the rail'); ok(layoutIssues({ items: [{ y0: 1000, y1: 1100, px: 40, w: 500, cx: 540 }] }).some(s => /under/.test(s)), 'layoutIssues flags under 42 px'); ok(layoutIssues({ items: [{ y0: 500, y1: 600, px: 100, w: 700, cx: 540 }] }).length === 0, 'layoutIssues passes a clean block');
+  ok(!composeCheck([{ name: 'a', x: 0, y: 0, w: 100, h: 100 }, { name: 'b', x: 50, y: 50, w: 100, h: 100 }]).ok, 'composeCheck finds an overlap'); ok(composeCheck([{ name: 'a', x: 0, y: 0, w: 100, h: 100 }, { name: 'b', x: 50, y: 50, w: 100, h: 100 }], { allow: [['a', 'b']], balance: 1 }).ok, 'composeCheck allows listed overlaps');
+  ok(composeCheck([{ name: 'a', x: 100, y: 400, w: 200, h: 100, px: 104 }, { name: 'b', x: 700, y: 700, w: 200, h: 100, px: 100 }]).issues.some(s => /too close/.test(s)), 'composeCheck: 104 and 100 px are not different levels'); ok(composeCheck([{ name: 'a', x: 60, y: 400, w: 200, h: 100 }]).issues.some(s => /centre line/.test(s)), 'composeCheck: unbalanced mass');
+  ok(composeCheck([{ name: 'a', x: 270, y: 400, w: 540, h: 100, px: 104 }, { name: 'b', x: 290, y: 600, w: 500, h: 80, px: 56 }]).ok, 'composeCheck passes a balanced, clear hierarchy');
+  // ---- contrast
+  near(contrastRatio('#ffffff', '#000000'), 21, 0.01, 'contrast white on black is 21'); near(contrastRatio('#777777', '#777777'), 1, 1e-9, 'contrast of a colour with itself is 1'); ok(contrastRatio(P.white, P.bg) > 15 && contrastRatio(P.muted, P.bg) > 7 && contrastRatio(P.green, P.panel) > 8, 'palette text contrast on the BGI ground'); ok(contrastRatio(P.dim, P.bg) < 3, 'the dim palette colour is NOT text-safe (under 3:1)');
+  near(luminance('#ffffff'), 1, 1e-9, 'luminance of white'); ok(ensureContrast(P.white, P.bg) === P.white, 'ensureContrast keeps a good colour'); const fx = ensureContrast(P.dim, P.panel, 4.5); ok(contrastRatio(fx, P.panel) >= 4.5 && fx !== P.dim, `ensureContrast fixes the dim grey (${fx} = ${contrastRatio(fx, P.panel).toFixed(2)}:1)`); ok(luminance(fx) > luminance(P.dim), 'on a dark ground it lightens');
+  const dk = ensureContrast('#9999aa', '#ffffff', 4.5); ok(contrastRatio(dk, '#ffffff') >= 4.5 && luminance(dk) < luminance('#9999aa'), 'on a light ground it darkens'); ok(contrastRatio(ensureContrast(P.dim, P.panel, 3), P.panel) >= 3, 'ensureContrast to 3:1 for large text');
+  ok(Object.values(ROLES).every(r => r.minPx >= 42 && r.px >= 42), 'every role respects the 42 px floor');
+  // ---- hygiene and determinism
+  for (const f of ['module.mjs', 'demo.mjs']) { const src = fs.readFileSync(new URL(f, import.meta.url), 'utf8').replace(/\/\/.*$/gm, ''); ok(!/Math\.random|Date\.now|new Date/.test(src), `${f}: no Math.random or Date`); }
+  const demo = await import('./demo.mjs'), hash = cv => crypto.createHash('sha1').update(cv.toBuffer('image/png')).digest('hex'); ok(hash(demo.frame(2.9, 87)) === hash(demo.frame(2.9, 87)), 'demo frame renders identically twice');
+} });

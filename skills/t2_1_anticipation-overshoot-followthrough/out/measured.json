@@ -1,0 +1,47 @@
+{
+ "button": {
+  "anticPct": 6,
+  "anticFrames": 2.9999999999999893,
+  "overshootPct": 11.999239711351777,
+  "peakFrames": 8.37499999999997,
+  "settleFrames": 14.999999999999947,
+  "maxSpeed": 4621.038761008185,
+  "settleAfterRelease": 11.999999999999947
+ },
+ "card": {
+  "anticPct": 5,
+  "anticFrames": 3.999999999999986,
+  "overshootPct": 9.999581617807507,
+  "peakFrames": 13.312499999999952,
+  "settleFrames": 18.87500000000014,
+  "maxSpeed": 2643.98428981247,
+  "settleAfterRelease": 14.875000000000139
+ },
+ "toast": {
+  "anticPct": 4,
+  "anticFrames": 4.999999999999982,
+  "overshootPct": 7.999790964807203,
+  "peakFrames": 15.124999999999954,
+  "settleFrames": 21.000000000000245,
+  "maxSpeed": 2420.436370751727,
+  "settleAfterRelease": 16.000000000000245
+ },
+ "badge": {
+  "anticPct": 10,
+  "anticFrames": 4.999999999999982,
+  "overshootPct": 14.998574102961356,
+  "peakFrames": 12.687499999999956,
+  "settleFrames": 23.062500000000348,
+  "maxSpeed": 3388.0475069646172,
+  "settleAfterRelease": 18.062500000000348
+ },
+ "panel": {
+  "anticPct": 3,
+  "anticFrames": 7.999999999999972,
+  "overshootPct": 7.999722827959971,
+  "peakFrames": 20.625000000000227,
+  "settleFrames": 27.93750000000059,
+  "maxSpeed": 1921.4389562929682,
+  "settleAfterRelease": 19.93750000000059
+ }
+}

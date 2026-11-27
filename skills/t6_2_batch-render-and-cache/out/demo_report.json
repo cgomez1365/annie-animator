@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 2160397,
+  "framesHash": "0cfdf3012ceb044ac38eb8cc4b34c679afa538b1",
+  "workers": 2,
+  "renderSeconds": 27.5,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t6_2_batch-render-and-cache/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t6_2_batch-render-and-cache/out/demo_contact.png"
+}

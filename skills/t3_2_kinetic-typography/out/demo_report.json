@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 2024325,
+  "framesHash": "a2fc2cdcf4d49d416fb3b6a443b20f9cb5175ec3",
+  "workers": 2,
+  "renderSeconds": 23.1,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_2_kinetic-typography/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t3_2_kinetic-typography/out/demo_contact.png"
+}

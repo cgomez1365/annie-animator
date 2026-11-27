@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 225,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 7.5,
+  "audioStream": false,
+  "bytes": 2233180,
+  "framesHash": "83272e71b0bff4ac0cbd47b8e791c8c73c6e25df",
+  "workers": 2,
+  "renderSeconds": 17.1,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_3_motion-brand-system/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_3_motion-brand-system/out/demo_contact.png"
+}

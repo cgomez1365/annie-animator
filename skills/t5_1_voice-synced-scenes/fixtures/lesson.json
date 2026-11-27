@@ -1,0 +1,66 @@
+{
+ "voice": "af_heart (Kokoro, speed 1)",
+ "source": "AI_Training_Long L01 sentences 0-9, resampled to 16 kHz mono",
+ "rows": [
+  {
+   "i": 0,
+   "text": "You have almost certainly used artificial intelligence today.",
+   "dur": 3.8,
+   "file": "fixtures/s00.wav"
+  },
+  {
+   "i": 1,
+   "text": "A search suggestion. An autocorrected word. A recommended video.",
+   "dur": 4.8,
+   "file": "fixtures/s01.wav"
+  },
+  {
+   "i": 2,
+   "text": "But most people could not explain what it actually does.",
+   "dur": 3.425,
+   "file": "fixtures/s02.wav"
+  },
+  {
+   "i": 3,
+   "text": "In the next few minutes, you will be able to.",
+   "dur": 2.9,
+   "file": "fixtures/s03.wav"
+  },
+  {
+   "i": 4,
+   "text": "The chatbots and writing assistants you hear about are built on something called a large language model.",
+   "dur": 6.3,
+   "file": "fixtures/s04.wav"
+  },
+  {
+   "i": 5,
+   "text": "Its core job is easy to state. Given some text, predict the text that is most likely to come next.",
+   "dur": 6.875,
+   "file": "fixtures/s05.wav"
+  },
+  {
+   "i": 6,
+   "text": "Take the sentence: the capital of France is. The model assigns a probability to every possible next word.",
+   "dur": 7.1,
+   "file": "fixtures/s06.wav"
+  },
+  {
+   "i": 7,
+   "text": "Paris gets a very high one. Most other words get almost none.",
+   "dur": 4.375,
+   "file": "fixtures/s07.wav"
+  },
+  {
+   "i": 8,
+   "text": "It picks one, adds it to the text, and repeats. One word at a time, that is how a full answer gets written.",
+   "dur": 7.075,
+   "file": "fixtures/s08.wav"
+  },
+  {
+   "i": 9,
+   "text": "More precisely, it works in small pieces called tokens, which are often parts of words rather than whole words.",
+   "dur": 7.275,
+   "file": "fixtures/s09.wav"
+  }
+ ]
+}

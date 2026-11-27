@@ -1,0 +1,23 @@
+{
+  "tier": "t5",
+  "tierName": "Sound and sync",
+  "date": "2026-11-19",
+  "built": ["t5.1", "t5.2", "t5.3", "t5.4"],
+  "notBuilt": [],
+  "skills": [
+    { "id": "t5.1", "folder": "t5_1_voice-synced-scenes", "status": "verified", "test": "node test.mjs exit 0 at 1080x1920, 45 checks, QC pass (3 warnings)",
+      "measured": "Kokoro Heart clips pad 0.28-0.33 s before and 0.42-0.51 s after the speech; first/last word error 0.017 s (text-only) vs 0.385 s (old char-share); comma/full-stop boundaries 0.058 s vs 0.082 s; demo_av.mp4 voice within 0 ms of cue times",
+      "notChecked": "word times inside a clause (no ground truth: Kokoro ONNX returns only the waveform; no forced aligner); voices other than Heart; nobody listened" },
+    { "id": "t5.2", "folder": "t5_2_beat-sync", "status": "partial", "test": "node test.mjs exit 0 at 1080x1920, 85 checks, QC pass (1 warning)",
+      "measured": "tempo within 0.3 BPM on click tracks 120/90/140 and on beds A 108, D 100, E 118 at three start offsets; A and D phase within 1-3 ms; snapped cuts within 2 ms of a beat found in demo_av.mp4",
+      "missing": "bed E beat phase is exactly half a beat off (about 253 ms; syncopated bossa, louder off-beat bass): use the BEDS constants (phase 0) for E; recorded music other than the beds and synthetic clicks not tested; swingTime only unit-tested; nobody listened" },
+    { "id": "t5.3", "folder": "t5_3_sfx-design-and-mix", "status": "verified", "test": "node test.mjs exit 0 at 1080x1920, 81 checks, QC pass (1 warning)",
+      "measured": "seven effects: length, -3.0 dBFS peak, pitch, no clicks; meter checked on a known sine; demo mix -16.0 LUFS, true peak -4.5 dBTP (mp4: -16.0 / -4.6); ducking 5.2-6.4 dB by A/B, recovery 0.0 dB; effect placement within 15 ms (whoosh 68 ms soft rise); envelope plots written",
+      "notChecked": "nobody listened; effects not A/B compared by ear with the originals (tick peak now -3.0 dBFS, was -4.5); one voice and one 16 s bed; a full lesson was not remixed with this module" },
+    { "id": "t5.4", "folder": "t5_4_karaoke-captions", "status": "verified", "test": "node test.mjs exit 0 at 1080x1920, 37 checks, QC pass (16 warnings: caption band by design, motion text)",
+      "measured": "pill y 1386-1554, right edge 920, 52 px, at most 2 balanced lines; reading speed at most 20 characters/s; video and .srt agree at 2454/2454 sample times; green word checked by pixel; highlight within 50 ms and 27 ms of the voice heard in demo_av.mp4",
+      "notChecked": "word times inside a clause are estimates (+-0.1 s); contrast over busy pictures; nobody watched; render.mjs still has its own captions" }
+  ],
+  "engineRequests": "skills/t5_ENGINE_REQUESTS.md",
+  "images_viewed": 14
+}

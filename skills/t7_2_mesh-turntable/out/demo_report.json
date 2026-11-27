@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 225,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 7.5,
+  "audioStream": false,
+  "bytes": 3331372,
+  "framesHash": "954db0f2d5d9eb5d1060ff8a2276355f5b97b745",
+  "workers": 2,
+  "renderSeconds": 31.5,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_2_mesh-turntable/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_2_mesh-turntable/out/demo_contact.png"
+}

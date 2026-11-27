@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 2060730,
+  "framesHash": "4ccab58b19d592048faf2a2400e5c68b29f25ca6",
+  "workers": 2,
+  "renderSeconds": 28,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t2_3_particles-glow-light/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t2_3_particles-glow-light/out/demo_contact.png"
+}

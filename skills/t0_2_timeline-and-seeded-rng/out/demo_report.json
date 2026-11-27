@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 225,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 7.5,
+  "audioStream": false,
+  "bytes": 1847511,
+  "framesHash": "9ff66e05ee3d4110fa4f61003aaf04402b0db651",
+  "workers": 2,
+  "renderSeconds": 15.8,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t0_2_timeline-and-seeded-rng/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t0_2_timeline-and-seeded-rng/out/demo_contact.png"
+}

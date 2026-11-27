@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 2036902,
+  "framesHash": "35d692c3b145792c888574eedf7597e829e0d942",
+  "workers": 2,
+  "renderSeconds": 19.3,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t1_2_page-transitions/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t1_2_page-transitions/out/demo_contact.png"
+}

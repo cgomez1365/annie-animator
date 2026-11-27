@@ -1,0 +1,22 @@
+{
+  "id": "t4.3",
+  "tier": 4,
+  "tierName": "Character and story",
+  "name": "Expressions and acting",
+  "slug": "expressions-and-acting",
+  "summary": "Give Cog 12 readable emotions, natural blinks, snappy eye darts and reactions that wind up, pop and arrive part by part.",
+  "prerequisites": ["t4.1", "t4.2", "t0.1", "t0.2"],
+  "status": "verified",
+  "qualityBar": [
+    "12 emotions inside the art's safe range, every pair different in pixels, each in its expected valence/arousal quadrant (readFace)",
+    "Blinks: deterministic, gaps 2.2-5.0 s, mean 3-4.4 s, doubles 0.28 s apart, shut at 0.06 s and open at 0.20 s, closing faster than opening, eyes shut under 6 percent of the time",
+    "Eye darts 90 percent done in 0.08 s, never dead during a hold, head trails the eyes 0.08-0.2 s",
+    "Beats: eyes before brows before mouth, wind-up hands over to the reaction without a jump, outBack overshoots and settles, no value jumps more than 0.25 in 1/120 s",
+    "Demo: 1080x1920, 7.5 s, silent, QC pass, nothing frozen"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": ["SKILL.md", "module.mjs", "demo.mjs", "test.mjs", "skill.json", "out/demo.mp4", "out/contact.png"],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (75 checks passed, 0 failed; demo 1080x1920, 7.5 s, silent; engine QC on the card and the mp4 passed). I viewed the 12 emotion faces twice (after fixing a pale ring around squinting eyes by switching lids to clip regions, which also touched t4.1's drawEye: t4.1 was re-tested) and a 12-frame story sheet of the demo. NOT checked: the wind-up (windUp) was changed after the last viewed story sheet and re-tested by numbers only; emotion readability was judged by me and by the readFace formula, not by any viewer; the valence/arousal formula is a heuristic I wrote, not a validated model; motion was not played back by a person; no audio."
+}

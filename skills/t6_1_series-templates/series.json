@@ -1,0 +1,25 @@
+{
+  "id": "studio_notes",
+  "name": "Studio Notes",
+  "brand": "bgi",
+  "unit": "PART",
+  "total": 5,
+  "episodes": [
+    { "n": 1, "hook": ["Start with", "a script."],
+      "pages": [{ "type": "steps", "title": "script.json", "header": ["Every card", "begins as words."],
+        "items": [{ "t": "Write the hook" }, { "t": "List the beats" }, { "t": "Pick the closer" }] }] },
+    { "n": 2, "hook": ["One script.", "Every episode."],
+      "pages": [{ "type": "steps", "title": "series.json", "header": ["The template", "does the layout."],
+        "items": [{ "t": "Write the script" }, { "t": "Template draws it" }, { "t": "Render the series" }] }] },
+    { "n": 3, "hook": ["Four page", "types."],
+      "pages": [{ "type": "list", "title": "page types", "header": ["Pick the page", "that fits the job."],
+        "items": [{ "icon": "layers", "t": "Numbered steps" }, { "icon": "clipboard-check", "t": "Ticked checklists" }, { "icon": "gauge", "t": "Icon lists" }, { "icon": "cog", "t": "Side by side" }] }] },
+    { "n": 4, "hook": ["Check before", "you render."],
+      "pages": [{ "type": "checklist", "title": "validateSeries", "header": ["Three checks", "run first."],
+        "items": [{ "t": "Words fit the window" }, { "t": "Claims are clean" }, { "t": "Icons exist" }] }] },
+    { "n": 5, "hook": ["Series, or", "one-offs?"],
+      "pages": [{ "type": "compare", "title": "why a template", "header": ["Same look,", "every episode."],
+        "left": { "head": "One-offs", "lines": ["Drawn by hand", "Looks drift"] },
+        "right": { "head": "Series", "lines": ["One template", "Looks identical"] } }] }
+  ]
+}

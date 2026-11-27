@@ -1,0 +1,9 @@
+{
+ "voice": "af_heart (Kokoro, speed 1)",
+ "row": {
+  "text": "Paris gets a very high one. Most other words get almost none.",
+  "dur": 4.375,
+  "file": "fixtures/voice_s07.wav"
+ },
+ "bed": "D_swing_shuffle, 16 s excerpt starting on beat 1 (22.05 kHz mono)"
+}

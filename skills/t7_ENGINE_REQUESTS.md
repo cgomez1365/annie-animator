@@ -1,0 +1,5 @@
+# Engine requests from tier 7 (nothing blocking; all worked around inside the skill modules)
+
+1. Texture text is invisible to the QC (t7.1). Text drawn on a `texture()` canvas and mapped onto a card face is never logged, so the 42 px floor, zones and banned-claim rules cannot check it. Request: an optional `ctx.__annieLog` hand-off, or a `logTexture(ctx, quad)` helper, so mapped text can be checked at its on-screen size. Workaround: keep texture text at 100 px or more and review by eye.
+2. Cold-cache race for init-heavy cards (t7.2). `init()` runs once per worker, so two workers on a cold cache both decimate a 43 MB STL (about 0.4 s each, harmless) but a slower job would double its cost. Request: let a card export `async function prepare()` that the renderer runs once in the parent before it starts the workers. Workaround: `loadMesh` writes its cache atomically and `test.mjs` builds it before rendering.
+3. QC cadence data (t7.3). `qcCard` returns `motion.profile` per sampled frame, which the scorer uses. Request: keep that field stable (name and meaning) in future engine versions; the scorer depends on it.

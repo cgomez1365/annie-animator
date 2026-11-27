@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "preview": false,
+  "frames": 240,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "seconds": 8,
+  "audioStream": false,
+  "bytes": 1992012,
+  "framesHash": "99e0c47d38f1e0cea319c954121db36bf41fb8f6",
+  "workers": 2,
+  "renderSeconds": 25.1,
+  "mp4": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t1_4_persistent-motion/out/demo.mp4",
+  "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t1_4_persistent-motion/out/demo_contact.png"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "t6.3",
+  "tier": 6,
+  "tierName": "Production",
+  "name": "Platform packaging",
+  "slug": "platform-packaging",
+  "summary": "Check the video file, choose the cover frame and write the TikTok, Reels and Shorts post file with every limit, AI label, 18+ control and music credit checked.",
+  "prerequisites": [
+    "t0.3",
+    "t0.4"
+  ],
+  "status": "verified",
+  "qualityBar": [
+    "The generator reproduces all 100 text blocks of the 20 existing post files byte for byte",
+    "A 141-character TikTok title, 7 hashtags, a banned word, a 101-character hook, a # in a link, AI music without credit or Instagram audio name, and tags over 500 are caught; a 140-character title passes",
+    "AEON posts carry the 18+ line on all three platforms and TikTok Audience controls On; BGI-only posts do not",
+    "Video check passes a full-size silent master and fails preview size, a master with sound and 24 fps",
+    "The cover for the ported tt10 and for the demo is a headline frame before the closer, 1080x1920 with a 1080x1440 3:4 grid file, identical bytes on a second run"
+  ],
+  "demo": "out/demo.mp4",
+  "contact": "out/contact.png",
+  "test": "node test.mjs",
+  "files": [
+    "SKILL.md",
+    "module.mjs",
+    "demo.mjs",
+    "test.mjs",
+    "skill.json",
+    "out/demo.mp4",
+    "out/contact.png"
+  ],
+  "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (49 checks passed, 0 failed). The copy generator reproduced all 100 text blocks of the 20 existing post files byte for byte and every one of them validates; rule checks caught each planted violation; video checks ran on real full-size and preview encodes made with the engine and ffmpeg; cover ranking ran on the ported tt10 (picks t 1.2, score 8, the same moment the original card used) and on the demo; packageCard ran end to end on tt10. Demo rendered 1080x1920, 8.0 s, silent, checker passed (1 transient warning). I viewed out/contact.png and the tt10 3:4 grid cover and judged them good. NOT checked: no platform was opened, so the limits and switches are the dated 2026-10-29 research, not re-read from the live apps (TikTok 600 s and Reels/Shorts 180 s duration limits are from memory and only produce warnings); the cover score weights are my own heuristic, validated on two cards; no Taboola output (the existing posts have it, this skill does not); motion judged from stills, not played back."
+}

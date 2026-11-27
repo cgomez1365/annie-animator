@@ -1,0 +1,56 @@
+{
+ "tier": "t7 Masterwork and 3D",
+ "date": "2026-11-19",
+ "built": [
+  {
+   "id": "t7.1",
+   "name": "Pseudo 3D and isometric",
+   "folder": "t7_1_pseudo-3d-and-isometric",
+   "status": "verified",
+   "demo": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_1_pseudo-3d-and-isometric/out/demo.mp4",
+   "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_1_pseudo-3d-and-isometric/out/contact.png",
+   "testPassed": true,
+   "checksPassed": 58,
+   "checksFailed": 0,
+   "demoSeconds": 7.5,
+   "qcWarnings": 1,
+   "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (58 unit checks passed, 0 failed; demo rendered 1080x1920, 7.5 s, silent; engine QC on the card and on the mp4 passed with 1 warning, the Follow button text under 42 px for 0.10 s while it pops in). I viewed out/contact.png and judged it good; one transient flaw seen: at about 1.4 s the entering card briefly overlaps the tops of the cubes that are still bouncing. NOT checked: motion judged from stills and motion-energy numbers, not played back by a person; painter's sort is only proven for the demo layout and the unit cases, not for arbitrary interleaved objects; no audio."
+  },
+  {
+   "id": "t7.2",
+   "name": "Mesh turntable",
+   "folder": "t7_2_mesh-turntable",
+   "status": "verified",
+   "demo": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_2_mesh-turntable/out/demo.mp4",
+   "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_2_mesh-turntable/out/contact.png",
+   "testPassed": true,
+   "checksPassed": 44,
+   "checksFailed": 0,
+   "demoSeconds": 7.5,
+   "qcWarnings": 1,
+   "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (44 checks passed, 0 failed, including the real dragon_final_v9.stl: 861,384 -> 151,014 triangles, frame about 150 ms; demo rendered 1080x1920, 7.5 s, silent; engine QC passed on the card and the mp4 with 1 warning, the Follow button text under 42 px for 0.10 s while it pops in). I viewed out/contact.png and two full-size stills (turn and print reveal) and judged them good. NOT checked: motion judged from stills and numbers, not played back by a person; only one model (the dragon) and one fallback (torus knot, rendered but not viewed) were tried; the axolotl STL was not rendered; Gouraud shading means very large flat triangles would show faceting; no UV textures; no audio. The 'printed' reveal is a visual metaphor (a cut plane climbing the mesh), not a slicer simulation."
+  },
+  {
+   "id": "t7.3",
+   "name": "Motion brand system",
+   "folder": "t7_3_motion-brand-system",
+   "status": "verified",
+   "demo": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_3_motion-brand-system/out/demo.mp4",
+   "contact": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_3_motion-brand-system/out/contact.png",
+   "testPassed": true,
+   "checksPassed": 94,
+   "checksFailed": 0,
+   "demoSeconds": 7.5,
+   "qcWarnings": 2,
+   "verifiedBy": "2026-11-19: node test.mjs exit 0 at full size (94 checks passed, 0 failed, including scoring 9 real or synthetic cards through the engine QC; demo rendered 1080x1920, 7.5 s, silent; engine QC passed on the card and the mp4 with 2 warnings: the Follow button text under 42 px for 0.10 s while it pops in, and the EXIT lane label touching the Reels caption band for 0.07 s while it slides in). I viewed out/contact.png and two full-size stills and judged them good; the scorer caught a real defect in my own first demo (a label in the action rail), which I fixed. NOT checked: motion judged from stills and numbers, not played back by a person; the scorer reads source text plus QC, so it is a rule-follower, not a taste judge, and it cannot see helper modules unless passed in files; the cadence range (0.3-4 events a second) is calibrated only on six cards, not on viewer data; the real tt10 card could not be scored because it imports a deleted AEON path; the 12-tooth cog proportions are my own drawing, not the official mark outline."
+  }
+ ],
+ "notBuilt": [],
+ "engineRequests": "/Users/cris/Desktop/Reports/Agents/Annie_Animator/skills/t7_ENGINE_REQUESTS.md",
+ "notes": [
+  "Skills built in order t7.1, t7.2, t7.3; each tested at full size before the next.",
+  "t7.2 keeps a 2.7 MB decimated mesh cache in t7_2_mesh-turntable/cache (safe to delete).",
+  "Motion was judged from contact sheets, two to three full-size stills per skill and numeric checks, not played back by a person; no audio.",
+  "Images viewed by this builder: 17 of 25."
+ ]
+}
